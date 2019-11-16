@@ -15,12 +15,18 @@ public class Player extends Actor {
     public Texture texture;
     final int speed = 30000;
     Joystick joystick;
+    public final int health = 2;
 
     public Player(Joystick joystick, World world) {
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
         body.getBody().setTransform(new Vector2(320, 180), 0);
+    }
+
+    public void shoot(){
+
+
     }
 
     @Override

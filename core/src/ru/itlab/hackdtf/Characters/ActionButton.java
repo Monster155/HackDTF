@@ -1,0 +1,38 @@
+package ru.itlab.hackdtf.Characters;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+
+public class ActionButton extends Actor {
+    Texture shootButton;
+    Circle shootButtonCircle;
+    private int x = 500, y = 100, size = 25;
+
+    public ActionButton(final Player player) {
+        shootButton = new Texture(""); // TODO add picture
+        setBounds(x, y, size * 2, size * 2);
+        addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                player.shoot();
+            }
+        });
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        batch.draw(shootButton, x, y);
+    }
+
+}
