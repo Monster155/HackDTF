@@ -21,6 +21,7 @@ public class Player extends Actor {
     public int bulletCount = 0;
     Gun gun;
 
+
     public Player(Stage stage, Joystick joystick, World world) {
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
@@ -36,6 +37,26 @@ public class Player extends Actor {
         body.getBody().setLinearVelocity(joystick.cos * speed * delta, joystick.sin * speed * delta);
         gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
+
+        double minDistance = 1000f;
+        for (Enemy e : enemyArray) {
+            float x = body.getBody().getPosition().x;
+            float y = body.getBody().getPosition().y;
+            if (Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY())) <= minDistance) {
+                minDistance = Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY()));
+            }
+        }
+        for (Enemy e : enemyArray) {
+            float x = body.getBody().getPosition().x;
+            float y = body.getBody().getPosition().y;
+            if (Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY())) >= minDistance - 0.0001 && Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY())) <= minDistance + 0.0001) {
+                double angle = 0;
+                double angleRadian = ((y/minDistance) > 0) ? Math.acos(x/minDistance) : -Math.acos(x/minDistance);
+                angle = angleRadian * 180 / Math.PI;
+                body.getBody().setTransform(body.getBody().getPosition(), (float) angle);
+            }
+        }
+
     }
 
     @Override
