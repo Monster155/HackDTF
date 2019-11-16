@@ -40,11 +40,8 @@ public class UZI extends Gun {
             for (int i = 0; i < 3; i++) {
                 update(Gdx.graphics.getDeltaTime());
                 sum = 0;
-                for (Bullet b:
-                        bullets) {
-                    b.draw(batch, parentAlpha);
-                    b.remove();
-                }
+                bullets.get(0).draw(batch);
+                bullets.remove(0);
             }
 
         }

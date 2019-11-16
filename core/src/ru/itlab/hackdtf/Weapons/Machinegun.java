@@ -33,11 +33,8 @@ public class Machinegun extends Gun {
 
         if (Gdx.input.isTouched() && bulletCount != 0 && time - TimeUtils.nanosToMillis(TimeUtils.nanoTime()) >= timeBetweenShoot) {
             update(Gdx.graphics.getDeltaTime());
-            for (Bullet b :
-                    bullets) {
-                b.draw(batch, parentAlpha);
-                b.remove();
-            }
+            bullets.get(0).draw(batch);
+            bullets.remove(0);
         }
     }
 }
