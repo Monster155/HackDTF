@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
         player = new Player(joystick, world);
         stage.addActor(player);
         enemies = new Array<>();
-        enemies.add(new Enemy(world));
+        enemies.add(new Enemy(world, player));
         for (Enemy e : enemies) {
             stage.addActor(e);
         }

@@ -23,6 +23,8 @@ public class Joystick extends Actor {
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if(x > 400)
+                    x = 400;
                 backCircle.setPosition(x, y);
                 stickCircle.setPosition(x, y);
                 return true;
@@ -31,12 +33,16 @@ public class Joystick extends Actor {
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 super.touchDragged(event, x, y, pointer);
+                if(x > 400)
+                    x = 400;
                 stickCircle.setPosition(x, y);
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
+                if(x > 400)
+                    x = 400;
                 stickCircle.setPosition(backCircle.x, backCircle.y);
             }
         });

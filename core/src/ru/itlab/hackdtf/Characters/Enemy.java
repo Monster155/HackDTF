@@ -7,15 +7,21 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.lang.reflect.Array;
+
 import ru.itlab.hackdtf.CreateFixture;
 
 public class Enemy extends CharacterParent {
 
     Texture texture;
     Fixture body;
-    int speed = 50000;
+    int speed, health = 2;
+    Player player;
+    boolean dead = false;
 
-    public Enemy(World world) {
+    public Enemy(World world, Player player) {
+        this.player = player;
+        speed = player.speed;
         texture = new Texture(Gdx.files.internal("enemy.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "enemy", (short) 2);
         body.getBody().setTransform(new Vector2(200, 180), 0);
@@ -27,7 +33,7 @@ public class Enemy extends CharacterParent {
         body.getBody().setLinearVelocity((float) Math.cos(Math.toDegrees(body.getBody().getAngle())) * speed * delta,
                 (float) Math.sin(Math.toDegrees(body.getBody().getAngle())) * speed * delta);
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
-        //TODO logic of enemies
+        //TODO logic of enemies (use player)
     }
 
     @Override
@@ -46,6 +52,13 @@ public class Enemy extends CharacterParent {
                 texture.getWidth() + 0, //size in image file
                 texture.getHeight() + 0,
                 false, false);
+    }
+
+    public void damaged(){
+        health--;
+        if(health <= 0){
+            dead = true;
+        }
     }
 
     @Override
