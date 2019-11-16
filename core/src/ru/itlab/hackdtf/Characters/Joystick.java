@@ -15,10 +15,10 @@ public class Joystick extends Actor {
     public float sin = 0, cos = 0;
 
     public Joystick() {
-        stickTexture = new Texture(Gdx.files.internal("joystick/stick.png"));//TODO add joystick pictures
-        backTexture = new Texture(Gdx.files.internal("joystick/back.png"));
-        stickCircle = new Circle(75, 75, 30);
-        backCircle = new Circle(75, 75, 75);
+        stickTexture = new Texture(Gdx.files.internal("joystick/stick.png"));
+        backTexture = new Texture(Gdx.files.internal("joystick/circle.png"));
+        stickCircle = new Circle(75, 80, 30);
+        backCircle = new Circle(75, 80, 75);
         setBounds(0, 0, 640, 360);
         addListener(new InputListener() {
             @Override
@@ -33,6 +33,12 @@ public class Joystick extends Actor {
                 super.touchDragged(event, x, y, pointer);
                 stickCircle.setPosition(x, y);
             }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
+                stickCircle.setPosition(backCircle.x, backCircle.y);
+            }
         });
     }
 
@@ -42,13 +48,14 @@ public class Joystick extends Actor {
         float y = stickCircle.y - backCircle.y;
         float radius = (float) (Math.sqrt(x * x + y * y));
 
-        if (!backCircle.contains(stickCircle.x, stickCircle.y)) {
-            stickCircle.x = backCircle.radius * x / radius + backCircle.x;
-            stickCircle.y = backCircle.radius * y / radius + backCircle.y;
-        }
+        if (radius == 0) radius = 1;
+        sin = y / radius;
+        cos = x / radius;
 
-        sin = backCircle.radius / (backCircle.radius * y / radius + backCircle.y);
-        cos = backCircle.radius / (backCircle.radius * x / radius + backCircle.x);
+        if (!backCircle.contains(stickCircle.x, stickCircle.y)) {
+            stickCircle.x = backCircle.radius * cos + backCircle.x;
+            stickCircle.y = backCircle.radius * sin + backCircle.y;
+        }
     }
 
     @Override

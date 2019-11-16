@@ -1,26 +1,32 @@
 package ru.itlab.hackdtf.Characters;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+
+import ru.itlab.hackdtf.CreateFixture;
 
 public class Player extends Actor {
     public Fixture body;
     public Texture texture;
-    float x = 0, y = 0;
-    final int speed = 300;
+    final int speed = 30000;
+    Joystick joystick;
 
-    public Player(Joystick joystick) {
-        x = joystick.cos;
-        y = joystick.sin;
-        texture = new Texture(" ");  //TODO add picture of Player and create fixture
+    public Player(Joystick joystick, World world) {
+        this.joystick = joystick;
+        texture = new Texture(Gdx.files.internal("player.png"));
+        body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
+        body.getBody().setTransform(new Vector2(320, 180), 0);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        body.getBody().setLinearVelocity(x * speed, y * speed);
+        body.getBody().setLinearVelocity(joystick.cos * speed * delta, joystick.sin * speed * delta);
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
     }
 
