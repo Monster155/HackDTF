@@ -39,7 +39,7 @@ public class UZI extends Gun {
         if (Gdx.input.isTouched() && bulletCount != 0 && time - TimeUtils.nanosToMillis(TimeUtils.nanoTime()) >= timeBetweenShoot) {
             for (int i = 0; i < 3; i++) {
                 update(Gdx.graphics.getDeltaTime());
-                double sum = 0;
+                sum = 0;
                 for (Bullet b:
                         bullets) {
                     b.draw(batch, parentAlpha);
