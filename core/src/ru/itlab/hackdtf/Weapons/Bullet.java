@@ -22,7 +22,7 @@ public class Bullet extends Actor {
     @Override
     public void act(float delta) {
         x += speed * Math.cos(gun.getCharacterParentRotation()) * delta;
-        y += speed * Math.sin(gun.getCharacterParentRotation()) * delta;
+       y += speed * Math.sin(gun.getCharacterParentRotation()) * delta;
     }
 
     @Override

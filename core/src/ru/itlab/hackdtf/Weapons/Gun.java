@@ -16,12 +16,12 @@ public abstract class Gun extends Actor {
 
     CharacterParent parent;
 
-    public Gun(int x, int y, CharacterParent parent){
+    public Gun(int x, int y){
         this.x = x;
         this.y = y;
         time = TimeUtils.nanosToMillis(TimeUtils.nanoTime());
 
-        this.parent = parent;
+        parent = new CharacterParent();
     }
 
     public void update(float delta){

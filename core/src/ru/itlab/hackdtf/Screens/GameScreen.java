@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import ru.itlab.hackdtf.Characters.ActionButton;
 import ru.itlab.hackdtf.Characters.Joystick;
 import ru.itlab.hackdtf.Characters.Player;
 
@@ -18,6 +19,7 @@ public class GameScreen implements Screen {
     Player player;
     Joystick joystick;
     World world;
+    ActionButton actionButton;
 
     @Override
     public void show() {
@@ -28,6 +30,9 @@ public class GameScreen implements Screen {
         stage.addActor(joystick);
         player = new Player(joystick, world);
         stage.addActor(player);
+        actionButton = new ActionButton(player);
+        stage.addActor(actionButton);
+
 
         Gdx.input.setInputProcessor(stage);
     }
