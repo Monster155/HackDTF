@@ -34,7 +34,7 @@ public class Gun extends Actor {
                 0, //center for rotation and scaling x
                 0, //center for rotation and scaling y
                 size.x, size.y,
-                1, 1, //scale from center
+                1, -1, //scale from center
                 angleInDeg,
                 0, 0, //coordinates in image file
                 texture.getWidth(), //size in image file
