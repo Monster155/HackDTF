@@ -37,11 +37,8 @@ public class Shotgun extends Gun {
         if (Gdx.input.isTouched() && bulletCount != 0 && time - TimeUtils.nanosToMillis(TimeUtils.nanoTime()) >= timeBetweenShoot) {
             for (int i = 0; i < 4; i++) {
                 update(Gdx.graphics.getDeltaTime());
-                for (Bullet b:
-                        bullets) {
-                    b.draw(batch, parentAlpha);
-                    b.remove();
-                }
+                bullets.get(0).draw(batch);
+                bullets.remove(0);
             }
 
         }

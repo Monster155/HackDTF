@@ -1,11 +1,12 @@
 package ru.itlab.hackdtf.Weapons;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 
-public class Bullet extends Actor {
+public class Bullet{
     int x, y;
     int speed;
 
@@ -19,16 +20,16 @@ public class Bullet extends Actor {
         this.y = gun.y;
     }
 
-    @Override
-    public void act(float delta) {
+    public void update(float delta) {
         x += speed * Math.cos(gun.getCharacterParentRotation()) * delta;
        y += speed * Math.sin(gun.getCharacterParentRotation()) * delta;
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        act(parentAlpha);
+    public void draw(Batch batch) {
+        batch.begin();
+        update(Gdx.graphics.getDeltaTime());
         batch.draw(imgBullet, x, y, imgBullet.getWidth(), imgBullet.getHeight());
+        batch.end();
     }
 
     public void dispose() {
