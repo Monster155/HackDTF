@@ -32,6 +32,7 @@ public class Enemy extends Actor {
         body.getBody().setTransform(new Vector2(200, 180), 0);
         gun = new Gun(stage, world, 1);
         stage.addActor(gun);
+        player.enemies.add(this);
     }
 
     @Override
@@ -70,6 +71,7 @@ public class Enemy extends Actor {
     }
 
     public void destroy() {
+        player.enemies.removeValue(this, false);
         stage.getActors().removeValue(this, false);
     }
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 
 import ru.itlab.hackdtf.CreateFixture;
 import ru.itlab.hackdtf.Weapons.Gun;
@@ -19,10 +20,12 @@ public class Player extends Actor {
     Joystick joystick;
     public final int health = 2;//TODO create guns
     public int bulletCount = 0;
+    public Array<Enemy> enemies;
     Gun gun;
 
 
     public Player(Stage stage, Joystick joystick, World world) {
+        enemies = new Array<>();
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
@@ -39,24 +42,19 @@ public class Player extends Actor {
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
 
         double minDistance = 1000f;
-        for (Enemy e : enemyArray) {
-            float x = body.getBody().getPosition().x;
-            float y = body.getBody().getPosition().y;
-            if (Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY())) <= minDistance) {
-                minDistance = Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY()));
-            }
-        }
-        for (Enemy e : enemyArray) {
-            float x = body.getBody().getPosition().x;
-            float y = body.getBody().getPosition().y;
-            if (Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY())) >= minDistance - 0.0001 && Math.sqrt((x-e.getX())*(x-e.getX()) + (y-e.getY())*(y-e.getY())) <= minDistance + 0.0001) {
-                double angle = 0;
-                double angleRadian = ((y/minDistance) > 0) ? Math.acos(x/minDistance) : -Math.acos(x/minDistance);
-                angle = angleRadian * 180 / Math.PI;
-                body.getBody().setTransform(body.getBody().getPosition(), (float) angle);
-            }
-        }
+        for (Enemy e : enemies) {
+            float xp = body.getBody().getPosition().x;
+            float yp = body.getBody().getPosition().y;
+            float xe = e.body.getBody().getPosition().x;
+            float ye = e.body.getBody().getPosition().y;
 
+            double distance = Math.sqrt((xp - xe) * (xp - xe) + (yp - ye) * (yp - ye));
+            if (distance < minDistance) {
+                minDistance = distance;
+                float angleRadian = (float) (Math.atan2((yp - ye) / minDistance, (xp - xe) / minDistance) + Math.PI);
+                body.getBody().setTransform(body.getBody().getPosition(), angleRadian);
+            }
+        }
     }
 
     @Override
