@@ -24,8 +24,7 @@ public abstract class Gun extends Actor {
         this.parent = parent;
     }
 
-    @Override
-    public void act(float delta) {
+    public void update(float delta){
         time = TimeUtils.nanosToMillis(TimeUtils.nanoTime());
     }
 
