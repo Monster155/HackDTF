@@ -12,7 +12,7 @@ public class Joystick extends Actor {
 
     Circle backCircle, stickCircle;
     Texture stickTexture, backTexture;
-    public float sin = 0, cos = 0;
+    public float sin = 0, cos = 0, wall = 300;
 
     public Joystick() {
         stickTexture = new Texture(Gdx.files.internal("joystick/stick.png"));
@@ -23,27 +23,25 @@ public class Joystick extends Actor {
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if(x > 400)
-                    x = 400;
-                backCircle.setPosition(x, y);
-                stickCircle.setPosition(x, y);
+                if (x < wall) {
+                    backCircle.setPosition(x, y);
+                    stickCircle.setPosition(x, y);
+                }
                 return true;
             }
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 super.touchDragged(event, x, y, pointer);
-                if(x > 400)
-                    x = 400;
-                stickCircle.setPosition(x, y);
+                if (x < wall + backCircle.radius)
+                    stickCircle.setPosition(x, y);
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                if(x > 400)
-                    x = 400;
-                stickCircle.setPosition(backCircle.x, backCircle.y);
+                if (x < wall + backCircle.radius)
+                    stickCircle.setPosition(backCircle.x, backCircle.y);
             }
         });
     }

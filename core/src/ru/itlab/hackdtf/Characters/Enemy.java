@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 
-import java.lang.reflect.Array;
-
 import ru.itlab.hackdtf.CreateFixture;
 
 public class Enemy extends CharacterParent {
