@@ -17,8 +17,8 @@ public class Enemy extends CharacterParent {
 
     public Enemy(World world) {
         texture = new Texture(Gdx.files.internal("enemy.png"));
-        body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
-        body.getBody().setTransform(new Vector2(320, 180), 1.6f);
+        body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "enemy", (short) 2);
+        body.getBody().setTransform(new Vector2(200, 180), 0);
     }
 
     @Override
