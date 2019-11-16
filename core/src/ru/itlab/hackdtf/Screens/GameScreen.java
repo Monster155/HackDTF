@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import ru.itlab.hackdtf.Characters.Enemy;
 import ru.itlab.hackdtf.Characters.Joystick;
 import ru.itlab.hackdtf.Characters.Player;
 
@@ -16,6 +18,7 @@ public class GameScreen implements Screen {
     Stage stage;
     StretchViewport viewport;
     Player player;
+    Array<Enemy> enemies;
     Joystick joystick;
     World world;
 
@@ -28,6 +31,11 @@ public class GameScreen implements Screen {
         stage.addActor(joystick);
         player = new Player(joystick, world);
         stage.addActor(player);
+        enemies = new Array<>();
+        enemies.add(new Enemy(world));
+        for (Enemy e : enemies) {
+            stage.addActor(e);
+        }
 
         Gdx.input.setInputProcessor(stage);
     }

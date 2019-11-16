@@ -1,12 +1,10 @@
 package ru.itlab.hackdtf.Weapons;
 
-import com.badlogic.gdx.Gdx;
+import ru.itlab.hackdtf.Characters.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import java.util.ArrayList;
 
 public abstract class Gun extends Actor {
 

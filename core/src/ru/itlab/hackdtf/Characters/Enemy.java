@@ -9,24 +9,25 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import ru.itlab.hackdtf.CreateFixture;
 
-public class Player extends CharacterParent {
-    public Fixture body;
-    public Texture texture;
-    final int speed = 30000;
-    Joystick joystick;
+public class Enemy extends CharacterParent {
 
-    public Player(Joystick joystick, World world) {
-        this.joystick = joystick;
-        texture = new Texture(Gdx.files.internal("player.png"));
+    Texture texture;
+    Fixture body;
+    int speed = 50000;
+
+    public Enemy(World world) {
+        texture = new Texture(Gdx.files.internal("enemy.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
-        body.getBody().setTransform(new Vector2(320, 180), 0);
+        body.getBody().setTransform(new Vector2(320, 180), 1.6f);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        body.getBody().setLinearVelocity(joystick.cos * speed * delta, joystick.sin * speed * delta);
+        body.getBody().setLinearVelocity((float) Math.cos(Math.toDegrees(body.getBody().getAngle())) * speed * delta,
+                (float) Math.sin(Math.toDegrees(body.getBody().getAngle())) * speed * delta);
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
+        //TODO logic of enemies
     }
 
     @Override
