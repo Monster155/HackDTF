@@ -6,23 +6,32 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import ru.itlab.hackdtf.CreateFixture;
+import ru.itlab.hackdtf.Weapons.Gun;
 
-public class Enemy extends CharacterParent {
+public class Enemy extends Actor {
 
     Texture texture;
     Fixture body;
     int speed, health = 2;
     Player player;
     boolean dead = false;
+    public int bulletCount = 1000;//TODO create guns
+    Gun gun;
+    Stage stage;
 
-    public Enemy(World world, Player player) {
+    public Enemy(Stage stage, World world, Player player) {
+        this.stage = stage;
         this.player = player;
         speed = player.speed;
         texture = new Texture(Gdx.files.internal("enemy.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "enemy", (short) 2);
         body.getBody().setTransform(new Vector2(200, 180), 0);
+        gun = new Gun(stage, world, 1);
+        stage.addActor(gun);
     }
 
     @Override
@@ -30,8 +39,9 @@ public class Enemy extends CharacterParent {
         super.act(delta);
         body.getBody().setLinearVelocity((float) Math.cos(Math.toDegrees(body.getBody().getAngle())) * speed * delta,
                 (float) Math.sin(Math.toDegrees(body.getBody().getAngle())) * speed * delta);
+        gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
-        //TODO logic of enemies (use player)
+        //TODO logic of enemies (use player + logic of UFOB enemies)
     }
 
     @Override
@@ -52,11 +62,15 @@ public class Enemy extends CharacterParent {
                 false, false);
     }
 
-    public void damaged(){
+    public void damaged() {
         health--;
-        if(health <= 0){
-            dead = true;
+        if (health <= 0) {
+            destroy();
         }
+    }
+
+    public void destroy() {
+        stage.getActors().removeValue(this, false);
     }
 
     @Override

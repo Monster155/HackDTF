@@ -1,38 +1,40 @@
 package ru.itlab.hackdtf.Characters;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import ru.itlab.hackdtf.CreateFixture;
+import ru.itlab.hackdtf.Weapons.Gun;
 
-public class Player extends CharacterParent {
+public class Player extends Actor {
     public Fixture body;
     public Texture texture;
     final int speed = 30000;
     Joystick joystick;
-    public final int health = 2;
+    public final int health = 2;//TODO create guns
+    public int bulletCount = 0;
+    Gun gun;
 
-    public Player(Joystick joystick, World world) {
+    public Player(Stage stage, Joystick joystick, World world) {
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
         body.getBody().setTransform(new Vector2(320, 180), 0);
-    }
-
-    public void shoot(){
-        Gdx.app.log("Player", "Bulya pidr");
-
+        gun = new Gun(stage, world, 1);
+        stage.addActor(gun);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
         body.getBody().setLinearVelocity(joystick.cos * speed * delta, joystick.sin * speed * delta);
+        gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
     }
 

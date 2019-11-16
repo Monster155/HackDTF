@@ -21,7 +21,7 @@ public class ActionButton extends Actor {
         addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                player.shoot();
+                //player.shoot(); //TODO gun shoot
                 return super.touchDown(event, x, y, pointer, button);
             }
         });

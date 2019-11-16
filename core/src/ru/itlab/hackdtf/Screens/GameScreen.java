@@ -10,18 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import ru.itlab.hackdtf.Characters.ActionButton;
-import ru.itlab.hackdtf.Characters.EnemiesArray;
-import ru.itlab.hackdtf.Characters.Enemy;
-import ru.itlab.hackdtf.Characters.Joystick;
-import ru.itlab.hackdtf.Characters.Player;
+import ru.itlab.hackdtf.Characters.*;
 
 public class GameScreen implements Screen {
 
     Stage stage;
     StretchViewport viewport;
     Player player;
-    EnemiesArray enemies;
     Joystick joystick;
     World world;
     Box2DDebugRenderer b2ddr;
@@ -37,15 +32,13 @@ public class GameScreen implements Screen {
         joystick = new Joystick();
         stage.addActor(joystick);
 
-        player = new Player(joystick, world);
+        player = new Player(stage, joystick, world);
         stage.addActor(player);
 
         actionButton = new ActionButton(player);
         stage.addActor(actionButton);
 
-        enemies = new EnemiesArray();
-        stage.addActor(enemies);
-        enemies.add(new Enemy(world, player));
+        stage.addActor(new Enemy(stage, world, player));
 
         Gdx.input.setInputProcessor(stage);
     }
