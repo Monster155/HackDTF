@@ -1,5 +1,6 @@
 package ru.itlab.hackdtf.Characters;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Circle;
@@ -9,12 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 public class ActionButton extends Actor {
     Texture shootButton;
-    Circle shootButtonCircle;
     private int x = 500, y = 100, size = 25;
 
     public ActionButton(final Player player) {
-        shootButton = new Texture(""); // TODO add picture
         setBounds(x, y, size * 2, size * 2);
+        shootButton = new Texture(Gdx.files.internal("actionButton.jpg"));
         addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
