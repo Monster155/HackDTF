@@ -9,11 +9,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class UZI extends Gun {
 
-    int x, y, bulletCount, timeBetweenShoot = 600, timeBetweenShootThreePools = 100;
+    int x, y, bulletCount, timeBetweenShoot = 600;
     float time;
+    double sum = 0;
 
     Texture gunTexture;
     ArrayList<Bullet> bullets;
@@ -30,6 +32,7 @@ public class UZI extends Gun {
         super.act(delta);
         bullets.add(new Bullet(this));
         bulletCount -= 3;
+        while(sum < 0.1) sum += delta;
     }
 
     @Override
@@ -37,14 +40,16 @@ public class UZI extends Gun {
         super.draw(batch, parentAlpha);
 
         if (Gdx.input.isTouched() && bulletCount != 0 && time - TimeUtils.nanosToMillis(TimeUtils.nanoTime()) >= timeBetweenShoot) {
-            act(parentAlpha);
-            for (Bullet b :
-                    bullets) {
-                if (>=timeBetweenShootThreePools) {
+            for (int i = 0; i < 3; i++) {
+                act(parentAlpha);
+                double sum = 0;
+                for (Bullet b:
+                        bullets) {
                     b.draw(batch, parentAlpha);
+                    b.remove();
                 }
-                b.remove();
             }
+
         }
     }
 }
