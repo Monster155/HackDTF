@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import ru.itlab.hackdtf.Characters.ActionButton;
 import ru.itlab.hackdtf.Characters.Enemy;
 import ru.itlab.hackdtf.Characters.Joystick;
 import ru.itlab.hackdtf.Characters.Player;
@@ -23,6 +24,7 @@ public class GameScreen implements Screen {
     Joystick joystick;
     World world;
     Box2DDebugRenderer b2ddr;
+    ActionButton actionButton;
 
     @Override
     public void show() {
@@ -34,6 +36,8 @@ public class GameScreen implements Screen {
         stage.addActor(joystick);
         player = new Player(joystick, world);
         stage.addActor(player);
+        actionButton = new ActionButton(player);
+        stage.addActor(actionButton);
         enemies = new Array<>();
         enemies.add(new Enemy(world, player));
         for (Enemy e : enemies) {
@@ -47,7 +51,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         world.step(delta, 6, 2);
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();

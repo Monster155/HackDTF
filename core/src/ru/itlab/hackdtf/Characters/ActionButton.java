@@ -8,20 +8,24 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
+import ru.itlab.hackdtf.Characters.Player;
+
+
 public class ActionButton extends Actor {
     Texture shootButton;
     private int x = 500, y = 100, size = 25;
 
     public ActionButton(final Player player) {
         setBounds(x, y, size * 2, size * 2);
-        shootButton = new Texture(Gdx.files.internal("actionButton.jpg"));
-        addListener(new InputListener() {
+        shootButton = new Texture(Gdx.files.internal("actionButton.png"));
+        this.addListener(new InputListener(){
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
                 player.shoot();
             }
         });
+
     }
 
     @Override
