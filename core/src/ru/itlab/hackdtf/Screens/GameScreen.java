@@ -37,14 +37,15 @@ public class GameScreen implements Screen {
         joystick = new Joystick();
         stage.addActor(joystick);
 
-        player = new Player(joystick, world);
+        enemies = new EnemiesArray();
+        stage.addActor(enemies);
+
+        player = new Player(joystick, world, enemies);
         stage.addActor(player);
 
         actionButton = new ActionButton(player);
         stage.addActor(actionButton);
 
-        enemies = new EnemiesArray();
-        stage.addActor(enemies);
         enemies.add(new Enemy(world, player));
 
         Gdx.input.setInputProcessor(stage);

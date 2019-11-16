@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class EnemiesArray extends Actor {
 
-    Array<Enemy> enemyArray;
+    public Array<Enemy> enemyArray;
 
     public EnemiesArray() {
         super();
