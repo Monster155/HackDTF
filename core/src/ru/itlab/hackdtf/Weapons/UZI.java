@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.itlab.hackdtf.Characters.*;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class UZI extends Gun {
 
