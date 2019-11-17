@@ -20,11 +20,12 @@ import ru.itlab.hackdtf.Weapons.Gun;
 public class GameScreen implements Screen {
 
     public static boolean isSlow = false;
-    public static int braker = 30;
+    public static int braker = 40;
 
     Stage stage;
     StretchViewport viewport;
     Player player;
+    //Enemy enemy;
     Joystick joystick;
     World world;
     Box2DDebugRenderer b2ddr;
@@ -50,6 +51,8 @@ public class GameScreen implements Screen {
 
         player = new Player(stage, joystick, world);
         stage.addActor(player);
+        //enemy = new Enemy(stage, world, player);
+        //stage.addActor(enemy);
 
         actionButton = new ActionButton(player);
         stage.addActor(actionButton);

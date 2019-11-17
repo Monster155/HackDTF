@@ -18,7 +18,7 @@ public class Bullet extends Actor {
     Stage stage;
     Fixture body;
     boolean isSlowLast = false;
-    int speed = 999999;
+    int speed = 69999;
     float angleInRad;
 
     public Bullet(float angleInRad, Vector2 pos, World world, Stage stage) {

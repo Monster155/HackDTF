@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import ru.itlab.hackdtf.CreateFixture;
 import ru.itlab.hackdtf.Screens.GameScreen;
@@ -20,6 +21,7 @@ public class Enemy extends Actor {
     boolean isSlowLast = false;
     int speed, health = 2;
     Player player;
+    long lastShoot = 0;
     boolean dead = false;
     public int bulletCount = 1000;//TODO create guns
     Gun gun;
@@ -61,6 +63,16 @@ public class Enemy extends Actor {
         double distance = Math.sqrt((xp - xe) * (xp - xe) + (yp - ye) * (yp - ye));
         float angleRadian = (float) (Math.atan2((yp - ye) / distance, (xp - xe) / distance));
         body.getBody().setTransform(body.getBody().getPosition(), angleRadian);
+        gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
+        int tmp = 1;
+        if (isSlowLast) {
+            tmp = GameScreen.braker / 10;
+        }
+        if (TimeUtils.millis() - lastShoot > Math.random() * 80000 * tmp) {
+            gun.shoot();
+            lastShoot = TimeUtils.millis();
+        }
+
     }
 
     @Override

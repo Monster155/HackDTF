@@ -130,7 +130,7 @@ public class Gun extends Actor {
     }
 
     public void updatePos(Vector2 pos, float angleInDeg, float size) {
-        this.pos.x = (float) (pos.x + (size / 2) * Math.cos(Math.toRadians(angleInDeg)));
+        this.pos.x = (float) (pos.x +  (size / 2) * Math.cos(Math.toRadians(angleInDeg)));
         this.pos.y = (float) (pos.y + (size / 2) * Math.sin(Math.toRadians(angleInDeg)));
         this.angleInDeg = angleInDeg;
     }
