@@ -43,6 +43,7 @@ public class GameScreen implements Screen {
     Array<Fixture> mapBody;
     int level[][];
     int i = -1, j = 0;
+    Fixture walls[] = new Fixture[4];
 
     @Override
     public void show() {
@@ -102,57 +103,25 @@ public class GameScreen implements Screen {
             //go to right level
             if (level[i].length > j + 1)
                 if (level[i][j + 1] != 0) {
-                    map.dispose();
-                    tmr.dispose();
-                    for (Fixture f : mapBody) {
-                        world.destroyBody(f.getBody());
-                    }
-                    map = new TmxMapLoader().load("levels/map2.tmx");
-                    tmr = new OrthogonalTiledMapRenderer(map, 4);
-                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
-                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                    loadNewRoom();
                 }
         } else if (player.body.getBody().getPosition().x < 0) {
             //go to left level
             if (j > 0)
                 if (level[i][j - 1] != 0) {
-                    map.dispose();
-                    tmr.dispose();
-                    for (Fixture f : mapBody) {
-                        world.destroyBody(f.getBody());
-                    }
-                    map = new TmxMapLoader().load("levels/map2.tmx");
-                    tmr = new OrthogonalTiledMapRenderer(map, 4);
-                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
-                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                    loadNewRoom();
                 }
         } else if (player.body.getBody().getPosition().y > 360) {
             //go to up level
             if (j > 0)
                 if (level[i - 1][j] != 0) {
-                    map.dispose();
-                    tmr.dispose();
-                    for (Fixture f : mapBody) {
-                        world.destroyBody(f.getBody());
-                    }
-                    map = new TmxMapLoader().load("levels/map2.tmx");
-                    tmr = new OrthogonalTiledMapRenderer(map, 4);
-                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
-                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                    loadNewRoom();
                 }
         } else if (player.body.getBody().getPosition().y < 0) {
             //go to down level
             if (level.length > i + 1)
                 if (level[i + 1][j] != 0) {
-                    map.dispose();
-                    tmr.dispose();
-                    for (Fixture f : mapBody) {
-                        world.destroyBody(f.getBody());
-                    }
-                    map = new TmxMapLoader().load("levels/map2.tmx");
-                    tmr = new OrthogonalTiledMapRenderer(map, 4);
-                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
-                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                    loadNewRoom();
                 }
         }
 
@@ -238,7 +207,39 @@ public class GameScreen implements Screen {
         Gdx.app.log("Level", this.i + " " + this.j);
     }
 
-    public void makeWalls(){
+    public void makeWalls() {
         //work with levels
+        walls[0] = CreateFixture.createBox(world, new Vector2(0, -10), new Vector2(640, 10), true, "wall", (short) 4);
+        walls[1] = CreateFixture.createBox(world, new Vector2(360, 0), new Vector2(10, 360), true, "wall", (short) 4);
+        walls[2] = CreateFixture.createBox(world, new Vector2(0, 360), new Vector2(640, 10), true, "wall", (short) 4);
+        walls[3] = CreateFixture.createBox(world, new Vector2(-10, 0), new Vector2(10, 360), true, "wall", (short) 4);
+    }
+
+    public void loadNewRoom(){
+        map.dispose();
+        tmr.dispose();
+        for (Fixture f : mapBody) {
+            world.destroyBody(f.getBody());
+        }
+        map = new TmxMapLoader().load("levels/map2.tmx");
+        tmr = new OrthogonalTiledMapRenderer(map, 4);
+        mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
+        player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+        resetWalls();
+    }
+
+    public void resetWalls() {
+        if (level.length > i + 1)
+            if (level[i + 1][j] != 0)
+                walls[2].getBody().setTransform(0, 400, 0);
+        if (i > 0)
+            if (level[i - 1][j] != 0)
+                walls[0].getBody().setTransform(0, -40, 0);
+        if (level[i].length > j + 1)
+            if (level[i][j + 1] != 0)
+                walls[1].getBody().setTransform(400, 0, 0);
+        if (j > 0)
+            if (level[i][j - 1] != 0)
+                walls[3].getBody().setTransform(-50, 0, 0);
     }
 }
