@@ -46,6 +46,8 @@ public class GameScreen implements Screen {
     int i = -1, j = 0;
     Fixture walls[] = new Fixture[4];
 
+    History history;
+
     @Override
     public void show() {
         world = new World(new Vector2(0, 0), true);
@@ -56,6 +58,9 @@ public class GameScreen implements Screen {
         b2ddr = new Box2DDebugRenderer();
         viewport = new StretchViewport(640, 360);
         stage = new Stage(viewport);
+
+        history = new History();
+        stage.addActor(history);
 
         level = Graph_map.getLevel();
         findStart();
@@ -85,6 +90,8 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
 
+        history.setText(0);
+        history.setDraw(true);
     }
 
     @Override
@@ -129,22 +136,29 @@ public class GameScreen implements Screen {
         stage.act();
         stage.draw();
 
-        b2ddr.render(world, stage.getCamera().combined);
+//        b2ddr.render(world, stage.getCamera().combined);
 
-        if(player.health <= 0){
-            if(level[i][j] == -2)
+        if (player.health <= 0) {
+            if (level[i][j] == -2) {
+                history.setText(1);
+                history.setDraw(true);
                 //TODO конец - ты слился как лох
+            }
             findStart();
             loadNewRoom();
             player.health = 2;
         }
 
-        if(level[i][j] == -2 && player.enemies.size == 0){
+        if (level[i][j] == -2 && player.enemies.size == 0) {
+            history.setText(2);
+            history.setDraw(true);
             //TODO конец - ты победил
         }
     }
 
-    public void thirdEnd(){
+    public void thirdEnd() {
+        history.setText(3);
+        history.setDraw(true);
         //TODO ты сначала не соснул, а потом как соснул
     }
 
@@ -246,7 +260,7 @@ public class GameScreen implements Screen {
                         } catch (Exception e) {
                         }
                     }
-                    if(fb.getUserData().equals("player"))
+                    if (fb.getUserData().equals("player"))
                         player.health--;
                 } else if (fb.getUserData().equals("eBullet") && !(fa.getUserData().equals("enemy") || fa.getUserData().equals("eBullet"))) {
                     Gdx.app.log("Enemy bullet", "touched B");
@@ -257,7 +271,7 @@ public class GameScreen implements Screen {
                         } catch (Exception e) {
                         }
                     }
-                    if(fa.getUserData().equals("player"))
+                    if (fa.getUserData().equals("player"))
                         player.health--;
                 }
 
@@ -307,9 +321,9 @@ public class GameScreen implements Screen {
 
     public void loadNewRoom() {
         myDispose();
-        if(level[i][j] == -1) {
+        if (level[i][j] == -1) {
             map = new TmxMapLoader().load("levels/map1.tmx");
-        } else if(level[i][j] == -2) {
+        } else if (level[i][j] == -2) {
             map = new TmxMapLoader().load("levels/map5.tmx");
         } else {
             map = new TmxMapLoader().load("levels/map2.tmx");
