@@ -67,7 +67,7 @@ public class MenuScreen implements Screen {
         authorsButtonSprite.setPosition((width/2f -authorsButtonSprite.getWidth()/2) , width/AUTHOR_VERT_POSITION_FACTOR);
         optionsButtonSprite.setPosition((width/2f -optionsButtonSprite.getWidth()/2) , width/OPTIONS_VERT_POSITION_FACTOR);
         timeExplorerSprite.setPosition((width/2f -timeExplorerSprite.getWidth()/2) , width/TIMEEXPLORER_VERT_POSITION_FACTOR);
-        backGroundSprite.setAlpha(0.2f);
+        backGroundSprite.setAlpha(1);
 
     }
 
