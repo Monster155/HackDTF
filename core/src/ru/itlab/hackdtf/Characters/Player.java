@@ -11,18 +11,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 import ru.itlab.hackdtf.CreateFixture;
+import ru.itlab.hackdtf.Screens.GameScreen;
 import ru.itlab.hackdtf.Weapons.Gun;
 
 public class Player extends Actor {
+
     public Fixture body;
     public Texture texture;
-    final int speed = 30000;
+    boolean isSlowLast = false;
+    int speed = 30000;
     Joystick joystick;
     public final int health = 2;//TODO create guns
     public int bulletCount = 0;
     public Array<Enemy> enemies;
-    Gun gun;
-
+    public Gun gun;
 
     public Player(Stage stage, Joystick joystick, World world) {
         enemies = new Array<>();
@@ -30,13 +32,17 @@ public class Player extends Actor {
         texture = new Texture(Gdx.files.internal("player.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
         body.getBody().setTransform(new Vector2(320, 180), 0);
-        gun = new Gun(stage, world, 1);
+        gun = new Gun(stage, world, 1, false, this);
+        gun.bulletCount = 10;
         stage.addActor(gun);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
+        if(isSlowLast != GameScreen.isSlow)
+            useBraking(GameScreen.isSlow);
+
         body.getBody().setLinearVelocity(joystick.cos * speed * delta, joystick.sin * speed * delta);
         gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
@@ -55,6 +61,8 @@ public class Player extends Actor {
                 body.getBody().setTransform(body.getBody().getPosition(), angleRadian);
             }
         }
+
+        //TODO check for find and take a new weapon
     }
 
     @Override
@@ -78,5 +86,15 @@ public class Player extends Actor {
     @Override
     public float getRotation() {
         return body.getBody().getAngle();
+    }
+
+    public void useBraking(boolean isSlow) {
+        if (isSlow) speed /= GameScreen.braker;
+        else speed *= GameScreen.braker;
+        isSlowLast = isSlow;
+    }
+
+    public void pickUp(Gun gun){
+        this.gun = gun;
     }
 }

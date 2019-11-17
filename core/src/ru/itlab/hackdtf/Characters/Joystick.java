@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
+import ru.itlab.hackdtf.Screens.GameScreen;
+
 public class Joystick extends Actor {
 
     Circle backCircle, stickCircle;
@@ -60,6 +62,10 @@ public class Joystick extends Actor {
             stickCircle.x = backCircle.radius * cos + backCircle.x;
             stickCircle.y = backCircle.radius * sin + backCircle.y;
         }
+
+        if(cos == 0 && sin == 0)
+            GameScreen.isSlow = true;
+        else GameScreen.isSlow = false;
     }
 
     @Override

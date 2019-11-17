@@ -5,14 +5,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import ru.itlab.hackdtf.Characters.*;
+import ru.itlab.hackdtf.Weapons.Gun;
 
 public class GameScreen implements Screen {
+
+    public static boolean isSlow = false;
+    public static int braker = 30;
 
     Stage stage;
     StretchViewport viewport;
@@ -25,6 +33,9 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         world = new World(new Vector2(0, 0), true);
+
+        setWorldContactListener();
+
         b2ddr = new Box2DDebugRenderer();
         viewport = new StretchViewport(640, 360);
         stage = new Stage(viewport);
@@ -37,6 +48,11 @@ public class GameScreen implements Screen {
 
         actionButton = new ActionButton(player);
         stage.addActor(actionButton);
+
+        Gun gun = new Gun(stage, world, 3, false, player);
+        gun.pos = new Vector2(300, 200);
+        gun.isDropped = true;
+        stage.addActor(gun);
 
         stage.addActor(new Enemy(stage, world, player));
 
@@ -76,6 +92,33 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
+    }
 
+    private void setWorldContactListener() {
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture fa = contact.getFixtureA(), fb = contact.getFixtureB();
+                if (fa.getUserData().equals(null) || fa.getUserData().equals(null))
+                    return;
+
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
     }
 }

@@ -10,19 +10,23 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import ru.itlab.hackdtf.CreateFixture;
+import ru.itlab.hackdtf.Screens.GameScreen;
 
 public class Bullet extends Actor {
 
     Texture texture;
     Stage stage;
     Fixture body;
+    boolean isSlowLast = false;
     int speed = 999999;
+    float angleInRad;
 
     public Bullet(float angleInRad, Vector2 pos, World world, Stage stage) {
         this.stage = stage;
-        body = CreateFixture.createCircle(world, pos, 25, false, "pBullet", (short) 3);
+        this.angleInRad = angleInRad;
+        body = CreateFixture.createCircle(world, pos, 2.5f, false, "pBullet", (short) 1);
         body.getBody().setTransform(pos, angleInRad);
-        texture = new Texture(Gdx.files.internal("badlogic.jpg"));//TODO add texture
+        texture = new Texture(Gdx.files.internal("player.png"));//TODO add texture
     }
 
     @Override
@@ -44,12 +48,21 @@ public class Bullet extends Actor {
 
     @Override
     public void act(float delta) {
-        body.getBody().setLinearVelocity((float) Math.cos(Math.toDegrees(body.getBody().getAngle())) * speed * delta,
-            (float) Math.sin(Math.toDegrees(body.getBody().getAngle())) * speed * delta);
+        if(isSlowLast != GameScreen.isSlow)
+            useBraking(GameScreen.isSlow);
+        body.getBody().setTransform(body.getBody().getPosition(), angleInRad);
+        body.getBody().setLinearVelocity((float) Math.cos(body.getBody().getAngle()) * speed * delta,
+                (float) Math.sin(body.getBody().getAngle()) * speed * delta);
     }
 
-    public void destroy(){
+    public void destroy() {
         Gdx.app.log("Bullet", "deleted");
         stage.getActors().removeValue(this, false);
+    }
+
+    public void useBraking(boolean isSlow) {
+        if (isSlow) speed /= GameScreen.braker;
+        else speed *= GameScreen.braker;
+        isSlowLast = isSlow;
     }
 }
