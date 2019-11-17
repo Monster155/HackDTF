@@ -105,29 +105,29 @@ public class GameScreen implements Screen {
             //go to right level
             if (level[i].length > j + 1)
                 if (level[i][j + 1] != 0) {
-                    loadNewRoom();
                     j++;
+                    loadNewRoom();
                 }
         } else if (player.body.getBody().getPosition().x < 0) {
             //go to left level
             if (j > 0)
                 if (level[i][j - 1] != 0) {
-                    loadNewRoom();
                     j--;
+                    loadNewRoom();
                 }
         } else if (player.body.getBody().getPosition().y > 360) {
             //go to up level
             if (i > 0)
                 if (level[i - 1][j] != 0) {
-                    loadNewRoom();
                     i--;
+                    loadNewRoom();
                 }
         } else if (player.body.getBody().getPosition().y < 0) {
             //go to down level
             if (level.length > i + 1)
                 if (level[i + 1][j] != 0) {
-                    loadNewRoom();
                     i++;
+                    loadNewRoom();
                 }
         }
         tmr.setView((OrthographicCamera) stage.getCamera());
@@ -136,13 +136,12 @@ public class GameScreen implements Screen {
         stage.act();
         stage.draw();
 
-//        b2ddr.render(world, stage.getCamera().combined);
+        b2ddr.render(world, stage.getCamera().combined);
 
         if (player.health <= 0) {
             if (level[i][j] == -2) {
                 history.setText(1);
                 history.setDraw(true);
-                //TODO конец - ты слился как лох
             }
             findStart();
             loadNewRoom();
@@ -152,14 +151,13 @@ public class GameScreen implements Screen {
         if (level[i][j] == -2 && player.enemies.size == 0) {
             history.setText(2);
             history.setDraw(true);
-            //TODO конец - ты победил
         }
     }
 
     public void thirdEnd() {
         history.setText(3);
         history.setDraw(true);
-        //TODO ты сначала не соснул, а потом как соснул
+        //TODO before fight in last room you can choose: escape or fight
     }
 
     @Override
@@ -331,25 +329,39 @@ public class GameScreen implements Screen {
         tmr = new OrthogonalTiledMapRenderer(map, 4);
         mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
         player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+        stage.addActor(new Enemy(stage, world, player));
         resetWalls();
     }
 
     public void resetWalls() {
-        walls[0].getBody().setTransform(0, -5, 0);
+        walls[0].getBody().setTransform(5, -5, 0);
         walls[1].getBody().setTransform(645, 5, 0);
         walls[2].getBody().setTransform(5, 365, 0);
         walls[3].getBody().setTransform(-5, 5, 0);
-        if (level.length > i + 1)
-            if (level[i + 1][j] != 0)
+        if (level.length > i + 1) {
+            if (level[i + 1][j] != 0) {
+                walls[0].getBody().setLinearVelocity(5, -45);
                 walls[0].getBody().setTransform(5, -45, 0);
-        if (i > 0)
-            if (level[i - 1][j] != 0)
+            }
+        }
+        if (i > 0) {
+            if (level[i - 1][j] != 0) {
+                walls[2].getBody().setLinearVelocity(5, 405);
                 walls[2].getBody().setTransform(5, 405, 0);
-        if (level[i].length > j + 1)
-            if (level[i][j + 1] != 0)
+            }
+        }
+        if (level[i].length > j + 1) {
+            if (level[i][j + 1] != 0) {
+                walls[1].getBody().setLinearVelocity(685, 5);
                 walls[1].getBody().setTransform(685, 5, 0);
-        if (j > 0)
-            if (level[i][j - 1] != 0)
+            }
+        }
+        if (j > 0) {
+            if (level[i][j - 1] != 0) {
+                walls[3].getBody().setLinearVelocity(-45, 5);
                 walls[3].getBody().setTransform(-45, 5, 0);
+            }
+        }
+        Gdx.app.log("Pos", i + " " + j);
     }
 }
