@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import ru.itlab.hackdtf.Characters.Enemy;
 import ru.itlab.hackdtf.Characters.Player;
+import ru.itlab.hackdtf.Screens.GameScreen;
 
 public class Gun extends Actor {
 
@@ -18,14 +19,16 @@ public class Gun extends Actor {
     int type;
     Stage stage;
     World world;
-    float reload, reloadTime = 5;
+    float reload, reloadTime = 500;
     public int bulletCount;
 
     public boolean isDropped = false;
     Player player;
+    boolean isSlowLast;
 
     int sumOfBullets = 0, maxSumOfBullets;
     float timeForNextBullet;
+    float scatter = 0;
 
     public Vector2 pos = new Vector2(0, 0);
     public Vector2 size;
@@ -59,23 +62,44 @@ public class Gun extends Actor {
     @Override
     public void act(float delta) {
         reloadTime += delta;
+        if(isSlowLast != GameScreen.isSlow)
+            useBraking(GameScreen.isSlow);
         if (reloadTime > timeForNextBullet && sumOfBullets < maxSumOfBullets - 1 && sumOfBullets >= 0) {
             reloadTime = 0;
             sumOfBullets++;
-            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg), pos, world, stage));
+            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg + randRot()), pos, world, stage));
         }
+    }
+
+    public void useBraking(boolean isSlow) {
+        if (isSlow){
+            reload *= GameScreen.braker/5;
+            reloadTime *= GameScreen.braker/5;
+            timeForNextBullet *= GameScreen.braker/5;
+        }
+        else {
+            reload /= GameScreen.braker/5;
+            reloadTime /= GameScreen.braker/5;
+            timeForNextBullet /= GameScreen.braker/5;
+        }
+        isSlowLast = isSlow;
     }
 
     public void shoot() {
         if (reloadTime > reload && sumOfBullets == maxSumOfBullets - 1) {
             reloadTime = 0;
             sumOfBullets = 0;
-            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg), pos, world, stage));
+            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg + randRot()), pos, world, stage));
         }
     }
 
+    public float randRot() {
+        return (float) (-scatter / 2 + Math.random() * scatter);
+    }
+
     public void destroy() {
-        stage.getActors().removeValue(this, false);
+        player.guns.removeValue(this, true);
+        stage.getActors().removeValue(this, true);
     }
 
     public void chooseGun() {
@@ -87,6 +111,7 @@ public class Gun extends Actor {
                 maxSumOfBullets = 1;
                 timeForNextBullet = 0;
                 bulletCount = (int) (2 + TimeUtils.millis() % 4);
+                scatter = 25;
                 break;
             case 2:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
@@ -95,6 +120,7 @@ public class Gun extends Actor {
                 maxSumOfBullets = 3;
                 timeForNextBullet = 0.2f;
                 bulletCount = (int) (10 + TimeUtils.millis() % 6);
+                scatter = 50;
                 break;
             case 3:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
@@ -103,6 +129,7 @@ public class Gun extends Actor {
                 maxSumOfBullets = 4;
                 timeForNextBullet = 0;
                 bulletCount = (int) (16 + TimeUtils.millis() % 9);
+                scatter = 90;
                 break;
             case 4:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
@@ -111,15 +138,16 @@ public class Gun extends Actor {
                 maxSumOfBullets = 1;
                 timeForNextBullet = 0;
                 bulletCount = (int) (10 + TimeUtils.millis() % 11);
+                scatter = 70;
                 break;
 
-                //TODO set texture, bullet count, size, reload
+            //TODO set texture, bullet count, size, reload
         }
         sumOfBullets = maxSumOfBullets - 1;
     }
 
     public void updatePos(Vector2 pos, float angleInDeg, float size) {
-        this.pos.x = (float) (pos.x +  (size / 2) * Math.cos(Math.toRadians(angleInDeg)));
+        this.pos.x = (float) (pos.x + (size / 2) * Math.cos(Math.toRadians(angleInDeg)));
         this.pos.y = (float) (pos.y + (size / 2) * Math.sin(Math.toRadians(angleInDeg)));
         this.angleInDeg = angleInDeg;
     }

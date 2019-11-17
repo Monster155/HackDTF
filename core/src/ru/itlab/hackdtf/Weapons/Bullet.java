@@ -23,6 +23,7 @@ public class Bullet extends Actor {
 
     public Bullet(float angleInRad, Vector2 pos, World world, Stage stage) {
         this.stage = stage;
+        Gdx.app.log("Angle", angleInRad+"");
         this.angleInRad = angleInRad;
         body = CreateFixture.createCircle(world, pos, 2.5f, false, "pBullet", (short) 1);
         body.getBody().setTransform(pos, angleInRad);
@@ -61,7 +62,7 @@ public class Bullet extends Actor {
     }
 
     public void useBraking(boolean isSlow) {
-        if (isSlow) speed /= GameScreen.braker;
+        if (isSlow)speed /= GameScreen.braker;
         else speed *= GameScreen.braker;
         isSlowLast = isSlow;
     }

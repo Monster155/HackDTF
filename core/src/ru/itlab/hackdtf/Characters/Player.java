@@ -73,6 +73,7 @@ public class Player extends Actor {
         float size = body.getShape().getRadius();
         minDistance = 1000f;
         id = 0;
+        boolean founded = false;
         for (int i = 0; i < guns.size; i++) {
             if (!guns.get(i).isDropped) continue;
             double distance = Math.sqrt((xp - (guns.get(i).pos.x + guns.get(i).size.x / 2)) * (xp - (guns.get(i).pos.x + guns.get(i).size.x / 2))
@@ -82,8 +83,8 @@ public class Player extends Actor {
                 if (guns.get(i).isDropped && distance <= size) {
                     ActionButton.canTake = true;
                     id = i;
-                    break;
-                } else {
+                    founded = true;
+                } else if(!founded){
                     ActionButton.canTake = false;
                 }
             }
@@ -121,9 +122,9 @@ public class Player extends Actor {
     }
 
     public void pickUp() {
-        playerGun.isDropped = true;
-        stage.getActors().get(stage.getActors().indexOf(playerGun, true)).toFront();
+        playerGun.destroy();
         this.playerGun = guns.get(id);
         playerGun.isDropped = false;
+        ActionButton.canTake = false;
     }
 }
