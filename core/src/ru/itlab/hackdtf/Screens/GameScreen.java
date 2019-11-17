@@ -31,11 +31,6 @@ public class GameScreen implements Screen {
     Box2DDebugRenderer b2ddr;
     ActionButton actionButton;
 
-    public Vector2 getRandGun() {
-        int x = (int) (Math.random() * 600);
-        int y = (int) (Math.random() * 320);
-        return new Vector2(x, y);
-    }
     @Override
     public void show() {
         world = new World(new Vector2(0, 0), true);
@@ -58,7 +53,7 @@ public class GameScreen implements Screen {
         stage.addActor(actionButton);
 
         Gun gun = new Gun(stage, world, 3, false, player);
-        gun.pos = new Vector2(getRandGun());
+        gun.pos = new Vector2(400, 200);
         gun.isDropped = true;
         stage.addActor(gun);
 

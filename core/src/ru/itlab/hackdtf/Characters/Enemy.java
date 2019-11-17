@@ -27,18 +27,13 @@ public class Enemy extends Actor {
     Gun gun;
     Stage stage;
 
-    public Vector2 getRandPlace() {
-        int x = (int) (Math.random() * 600);
-        int y = (int) (Math.random() * 320);
-        return new Vector2(x, y);
-    }
     public Enemy(Stage stage, World world, Player player) {
         this.stage = stage;
         this.player = player;
         speed = player.speed / 10;
         texture = new Texture(Gdx.files.internal("enemy.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "enemy", (short) 2);
-        body.getBody().setTransform(new Vector2(getRandPlace()), 0);
+        body.getBody().setTransform(new Vector2(200, 300), 0);
         gun = new Gun(stage, world, 1, true, player);
         stage.addActor(gun);
         player.enemies.add(this);
