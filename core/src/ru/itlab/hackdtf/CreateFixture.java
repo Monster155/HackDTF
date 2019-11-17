@@ -22,12 +22,12 @@ public class CreateFixture {
         if (isStatic) def.type = BodyDef.BodyType.StaticBody;
         else def.type = BodyDef.BodyType.DynamicBody;
 
-        def.position.set(pos.x, pos.y);
+        def.position.set(pos.x+5, pos.y+5);
         def.fixedRotation = true;
         pBody = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(size.x / 2, size.y / 2);
+        shape.setAsBox(size.x, size.y);
 
         fixture = pBody.createFixture(shape, 1);
         fixture.setUserData(userData);

@@ -20,8 +20,8 @@ public class ActionButton extends Actor {
 
     public ActionButton(final Player player) {
         setBounds(x, y, size, size);
-        shootButton = new Texture(Gdx.files.internal("actionButton.png"));
-        takeButton = new Texture(Gdx.files.internal("player.png"));//TODO set image
+        shootButton = new Texture(Gdx.files.internal("player.png"));//TODO add texture
+        takeButton = new Texture(Gdx.files.internal("enemy.png"));//TODO add texture
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

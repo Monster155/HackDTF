@@ -16,16 +16,19 @@ public class Bullet extends Actor {
 
     Texture texture;
     Stage stage;
-    Fixture body;
+    public Fixture body;
     boolean isSlowLast = false;
     int speed = 69999;
     float angleInRad;
+    World world;
+    public boolean inGame = true;
 
-    public Bullet(float angleInRad, Vector2 pos, World world, Stage stage) {
+    public Bullet(float angleInRad, Vector2 pos, World world, Stage stage, boolean isEnemy) {
+        this.world = world;
         this.stage = stage;
-        Gdx.app.log("Angle", angleInRad+"");
         this.angleInRad = angleInRad;
-        body = CreateFixture.createCircle(world, pos, 1, false, "pBullet", (short) 1);
+        if(!isEnemy)body = CreateFixture.createCircle(world, pos, 1, false, "pBullet", (short) 1);
+        else body = CreateFixture.createCircle(world, pos, 1, false, "eBullet", (short) 1);
         body.getBody().setTransform(pos, angleInRad);
         texture = new Texture(Gdx.files.internal("player.png"));//TODO add texture
     }
@@ -54,11 +57,13 @@ public class Bullet extends Actor {
         body.getBody().setTransform(body.getBody().getPosition(), angleInRad);
         body.getBody().setLinearVelocity((float) Math.cos(body.getBody().getAngle()) * speed * delta,
                 (float) Math.sin(body.getBody().getAngle()) * speed * delta);
+
+        if(!inGame)destroy();
     }
 
     public void destroy() {
-        Gdx.app.log("Bullet", "deleted");
         stage.getActors().removeValue(this, false);
+        world.destroyBody(body.getBody());
     }
 
     public void useBraking(boolean isSlow) {

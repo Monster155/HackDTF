@@ -17,17 +17,17 @@ import ru.itlab.hackdtf.Weapons.Gun;
 public class Enemy extends Actor {
 
     Texture texture;
-    Fixture body;
+    public Fixture body;
     boolean isSlowLast = false;
     int speed, health = 2;
     Player player;
     long lastShoot = 0;
-    boolean dead = false;
-    public int bulletCount = 1000;//TODO create guns
+    World world;
     Gun gun;
     Stage stage;
 
     public Enemy(Stage stage, World world, Player player) {
+        this.world = world;
         this.stage = stage;
         this.player = player;
         speed = player.speed / 10;
@@ -71,6 +71,9 @@ public class Enemy extends Actor {
             lastShoot = TimeUtils.millis();
         }
 
+        if (health <= 0) {
+            destroy();
+        }
     }
 
     @Override
@@ -93,15 +96,13 @@ public class Enemy extends Actor {
 
     public void damaged() {
         health--;
-        if (health <= 0) {
-            destroy();
-        }
     }
 
     public void destroy() {
         gun.isDropped = true;
+        gun.isEnemy = false;
         player.enemies.removeValue(this, true);
-        //TODO clear fixture
+        world.destroyBody(body.getBody());
         stage.getActors().removeValue(this, true);
     }
 

@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import ru.itlab.hackdtf.Characters.*;
 import ru.itlab.hackdtf.*;
+import ru.itlab.hackdtf.Weapons.Bullet;
 import ru.itlab.hackdtf.Weapons.Gun;
 
 public class GameScreen implements Screen {
@@ -51,9 +52,6 @@ public class GameScreen implements Screen {
         mapBody = new Array<>();
 
         setWorldContactListener();
-        map = new TmxMapLoader().load("levels/map1.tmx");
-        tmr = new OrthogonalTiledMapRenderer(map, 4);
-        mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
 
         b2ddr = new Box2DDebugRenderer();
         viewport = new StretchViewport(640, 360);
@@ -62,6 +60,7 @@ public class GameScreen implements Screen {
         level = Graph_map.getLevel();
         findStart();
         makeWalls();
+        resetWalls();
 
         joystick = new Joystick();
         stage.addActor(joystick);
@@ -91,41 +90,62 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         world.step(delta, 6, 2);
-        tmr.setView((OrthographicCamera) stage.getCamera());
-        tmr.render();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
-        stage.draw();
 
         if (player.body.getBody().getPosition().x > 640) {
             //go to right level
             if (level[i].length > j + 1)
                 if (level[i][j + 1] != 0) {
                     loadNewRoom();
+                    j++;
                 }
         } else if (player.body.getBody().getPosition().x < 0) {
             //go to left level
             if (j > 0)
                 if (level[i][j - 1] != 0) {
                     loadNewRoom();
+                    j--;
                 }
         } else if (player.body.getBody().getPosition().y > 360) {
             //go to up level
-            if (j > 0)
+            if (i > 0)
                 if (level[i - 1][j] != 0) {
                     loadNewRoom();
+                    i--;
                 }
         } else if (player.body.getBody().getPosition().y < 0) {
             //go to down level
             if (level.length > i + 1)
                 if (level[i + 1][j] != 0) {
                     loadNewRoom();
+                    i++;
                 }
         }
+        tmr.setView((OrthographicCamera) stage.getCamera());
+        tmr.render();
+
+        stage.act();
+        stage.draw();
 
         b2ddr.render(world, stage.getCamera().combined);
+
+        if(player.health <= 0){
+            if(level[i][j] == -2)
+                //TODO конец - ты слился как лох
+            findStart();
+            loadNewRoom();
+            player.health = 2;
+        }
+
+        if(level[i][j] == -2 && player.enemies.size == 0){
+            //TODO конец - ты победил
+        }
+    }
+
+    public void thirdEnd(){
+        //TODO ты сначала не соснул, а потом как соснул
     }
 
     @Override
@@ -154,6 +174,14 @@ public class GameScreen implements Screen {
         map.dispose();
     }
 
+    public void myDispose() {
+        map.dispose();
+        tmr.dispose();
+        for (Fixture f : mapBody) {
+            world.destroyBody(f.getBody());
+        }
+    }
+
     private void setWorldContactListener() {
         world.setContactListener(new ContactListener() {
             @Override
@@ -161,7 +189,7 @@ public class GameScreen implements Screen {
                 Fixture fa = contact.getFixtureA(), fb = contact.getFixtureB();
                 if (fa.getUserData() == null || fa.getUserData() == null)
                     return;
-                if ((fa.getUserData().equals("player") && fb.getUserData().equals("enemy")))
+                if (fa.getUserData().equals("player") && fb.getUserData().equals("enemy"))
                     for (Actor actor : stage.getActors()) {
                         try {
                             if (((Enemy) actor).equals(fb)) {
@@ -169,9 +197,70 @@ public class GameScreen implements Screen {
                                 break;
                             }
                         } catch (Exception e) {
-                            Gdx.app.log(actor.getName() + "", "is not an Enemy");
                         }
                     }
+                else if (fb.getUserData().equals("player") && fa.getUserData().equals("enemy"))
+                    for (Actor actor : stage.getActors()) {
+                        try {
+                            if (((Enemy) actor).equals(fa)) {
+                                ((Enemy) actor).damaged();
+                                break;
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                if (fa.getUserData().equals("pBullet") && !(fb.getUserData().equals("player") || fb.getUserData().equals("pBullet"))) {
+                    Gdx.app.log("Bullet", "touched A");
+                    for (Actor a : stage.getActors()) {
+                        try {
+                            if (((Bullet) a).body.equals(fa))
+                                ((Bullet) a).inGame = false;
+                        } catch (Exception e) {
+                        }
+                    }
+                    for (Enemy e : player.enemies) {
+                        if (e.body.equals(fb))
+                            e.damaged();
+                    }
+                } else if (fb.getUserData().equals("pBullet") && !(fa.getUserData().equals("player") || fa.getUserData().equals("pBullet"))) {
+                    Gdx.app.log("Bullet", "touched B");
+                    for (Actor a : stage.getActors()) {
+                        try {
+                            if (((Bullet) a).body.equals(fb))
+                                ((Bullet) a).inGame = false;
+                        } catch (Exception e) {
+                        }
+                    }
+                    for (Enemy e : player.enemies) {
+                        if (e.body.equals(fa))
+                            e.damaged();
+                    }
+                }
+
+                if (fa.getUserData().equals("eBullet") && !(fb.getUserData().equals("enemy") || fb.getUserData().equals("eBullet"))) {
+                    Gdx.app.log("Enemy bullet", "touched A");
+                    for (Actor a : stage.getActors()) {
+                        try {
+                            if (((Bullet) a).body.equals(fa))
+                                ((Bullet) a).inGame = false;
+                        } catch (Exception e) {
+                        }
+                    }
+                    if(fb.getUserData().equals("player"))
+                        player.health--;
+                } else if (fb.getUserData().equals("eBullet") && !(fa.getUserData().equals("enemy") || fa.getUserData().equals("eBullet"))) {
+                    Gdx.app.log("Enemy bullet", "touched B");
+                    for (Actor a : stage.getActors()) {
+                        try {
+                            if (((Bullet) a).body.equals(fb))
+                                ((Bullet) a).inGame = false;
+                        } catch (Exception e) {
+                        }
+                    }
+                    if(fa.getUserData().equals("player"))
+                        player.health--;
+                }
+
             }
 
             @Override
@@ -192,7 +281,6 @@ public class GameScreen implements Screen {
     }
 
     public void findStart() {
-        Gdx.app.log("Level", level.length + " " + level[0].length);
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length; j++) {
                 if (level[i][j] == -1) {
@@ -204,24 +292,28 @@ public class GameScreen implements Screen {
             if (this.i != -1)
                 break;
         }
-        Gdx.app.log("Level", this.i + " " + this.j);
     }
 
     public void makeWalls() {
-        //work with levels
-        walls[0] = CreateFixture.createBox(world, new Vector2(0, -10), new Vector2(640, 10), true, "wall", (short) 4);
-        walls[1] = CreateFixture.createBox(world, new Vector2(360, 0), new Vector2(10, 360), true, "wall", (short) 4);
-        walls[2] = CreateFixture.createBox(world, new Vector2(0, 360), new Vector2(640, 10), true, "wall", (short) 4);
-        walls[3] = CreateFixture.createBox(world, new Vector2(-10, 0), new Vector2(10, 360), true, "wall", (short) 4);
+        map = new TmxMapLoader().load("levels/map1.tmx");
+        tmr = new OrthogonalTiledMapRenderer(map, 4);
+        mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
+
+        walls[0] = CreateFixture.createBox(world, new Vector2(5, -5), new Vector2(640, 10), true, "wall", (short) 4);
+        walls[1] = CreateFixture.createBox(world, new Vector2(645, 5), new Vector2(10, 360), true, "wall", (short) 4);
+        walls[2] = CreateFixture.createBox(world, new Vector2(5, 365), new Vector2(640, 10), true, "wall", (short) 4);
+        walls[3] = CreateFixture.createBox(world, new Vector2(-5, 5), new Vector2(10, 360), true, "wall", (short) 4);
     }
 
-    public void loadNewRoom(){
-        map.dispose();
-        tmr.dispose();
-        for (Fixture f : mapBody) {
-            world.destroyBody(f.getBody());
+    public void loadNewRoom() {
+        myDispose();
+        if(level[i][j] == -1) {
+            map = new TmxMapLoader().load("levels/map1.tmx");
+        } else if(level[i][j] == -2) {
+            map = new TmxMapLoader().load("levels/map5.tmx");
+        } else {
+            map = new TmxMapLoader().load("levels/map2.tmx");
         }
-        map = new TmxMapLoader().load("levels/map2.tmx");
         tmr = new OrthogonalTiledMapRenderer(map, 4);
         mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
         player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
@@ -229,17 +321,21 @@ public class GameScreen implements Screen {
     }
 
     public void resetWalls() {
+        walls[0].getBody().setTransform(0, -5, 0);
+        walls[1].getBody().setTransform(645, 5, 0);
+        walls[2].getBody().setTransform(5, 365, 0);
+        walls[3].getBody().setTransform(-5, 5, 0);
         if (level.length > i + 1)
             if (level[i + 1][j] != 0)
-                walls[2].getBody().setTransform(0, 400, 0);
+                walls[0].getBody().setTransform(5, -45, 0);
         if (i > 0)
             if (level[i - 1][j] != 0)
-                walls[0].getBody().setTransform(0, -40, 0);
+                walls[2].getBody().setTransform(5, 405, 0);
         if (level[i].length > j + 1)
             if (level[i][j + 1] != 0)
-                walls[1].getBody().setTransform(400, 0, 0);
+                walls[1].getBody().setTransform(685, 5, 0);
         if (j > 0)
             if (level[i][j - 1] != 0)
-                walls[3].getBody().setTransform(-50, 0, 0);
+                walls[3].getBody().setTransform(-45, 5, 0);
     }
 }

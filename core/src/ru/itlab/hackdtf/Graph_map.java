@@ -118,7 +118,6 @@ public class Graph_map {
         return count_and_value_graph;
     }
 
-    //TODO: где нет прохода там блок fixture
     public static void main(String[] args) {
         int map_size = 5; // количество уровней
         int[][] map_matrix = new int[map_size * 2 + 1][map_size * 2 + 1];

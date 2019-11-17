@@ -23,8 +23,7 @@ public class Player extends Actor {
     boolean isSlowLast = false;
     int speed = 30000, id = 0;
     Joystick joystick;
-    public final int health = 2;//TODO create guns
-    public int bulletCount = 0;
+    public int health = 2;
     public Array<Enemy> enemies;
     public static Array<Gun> guns;
     public Gun playerGun;
@@ -90,7 +89,6 @@ public class Player extends Actor {
                 }
             }
         }
-        //TODO check for find and take a new weapon
     }
 
     @Override
@@ -123,6 +121,8 @@ public class Player extends Actor {
     }
 
     public void pickUp() {
+        if(guns.indexOf(playerGun, true) < id)
+            id--;
         playerGun.destroy();
         this.playerGun = guns.get(id);
         playerGun.isDropped = false;

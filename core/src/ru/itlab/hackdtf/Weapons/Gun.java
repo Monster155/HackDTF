@@ -33,9 +33,11 @@ public class Gun extends Actor {
     public Vector2 pos = new Vector2(0, 0);
     public Vector2 size;
     public float angleInDeg = 0;
+    public boolean isEnemy;
 
     public Gun(Stage stage, World world, int type, boolean isEnemy, Player player) {
         this.player = player;
+        this.isEnemy = isEnemy;
         this.type = type;
         chooseGun();
         if (isEnemy) bulletCount = 99999;
@@ -67,7 +69,7 @@ public class Gun extends Actor {
         if (reloadTime > timeForNextBullet && sumOfBullets < maxSumOfBullets - 1 && sumOfBullets >= 0) {
             reloadTime = 0;
             sumOfBullets++;
-            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg + randRot()), pos, world, stage));
+            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg + randRot()), pos, world, stage, isEnemy));
         }
     }
 
@@ -89,7 +91,7 @@ public class Gun extends Actor {
         if (reloadTime > reload && sumOfBullets == maxSumOfBullets - 1) {
             reloadTime = 0;
             sumOfBullets = 0;
-            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg + randRot()), pos, world, stage));
+            stage.addActor(new Bullet((float) Math.toRadians(angleInDeg + randRot()), pos, world, stage, isEnemy));
         }
     }
 
@@ -140,8 +142,6 @@ public class Gun extends Actor {
                 bulletCount = (int) (10 + TimeUtils.millis() % 11);
                 scatter = 70;
                 break;
-
-            //TODO set texture, bullet count, size, reload
         }
         sumOfBullets = maxSumOfBullets - 1;
     }
