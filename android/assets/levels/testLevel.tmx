@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="left-down" width="16" height="9" tilewidth="10" tileheight="10" infinite="0" nextlayerid="8" nextobjectid="48">
- <tileset firstgid="1" name="Tiles" tilewidth="20" tileheight="20" tilecount="0" columns="72">
-  <image source="../TiledMap Projects/Tiles.jpg" width="1440" height="960"/>
- </tileset>
+<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="left-down" width="16" height="9" tilewidth="10" tileheight="10" infinite="0" nextlayerid="8" nextobjectid="56">
+ <tileset firstgid="1" source="Tiles.tsx"/>
  <objectgroup id="3" name="Objects">
   <object id="36" x="0" y="20">
    <polyline points="0,0 0,-20 70,-20"/>
@@ -25,15 +23,15 @@
  </objectgroup>
  <layer id="7" name="Tiles" width="16" height="9">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+543,543,543,543,543,543,543,0,0,543,543,543,543,543,543,543,
+543,543,543,543,543,543,543,543,543,543,543,543,543,543,543,543,
+0,543,116,116,116,543,543,116,116,543,543,116,116,543,543,543,
+0,543,116,116,116,543,543,543,543,543,543,116,116,543,543,543,
+543,543,543,543,543,543,543,543,543,543,543,116,116,543,543,0,
+543,543,543,543,543,543,116,116,116,116,543,116,116,543,543,0,
+543,543,116,116,543,543,116,116,116,116,543,543,543,543,543,543,
+543,543,116,116,543,543,116,116,116,116,543,543,543,543,116,543,
+543,543,543,543,543,543,543,543,543,543,543,0,0,543,543,543
 </data>
  </layer>
 </map>

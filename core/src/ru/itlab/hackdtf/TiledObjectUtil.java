@@ -21,6 +21,7 @@ public class TiledObjectUtil {
         MapObjects objects = tiledMap.getLayers().get("Objects").getObjects();
         for (MapObject object : objects) {
             Shape shape;
+
             try {
                 shape = createRectangle((RectangleMapObject) object);
                 Fixture fixture;
@@ -31,7 +32,10 @@ public class TiledObjectUtil {
                 fixture = body.createFixture(shape, 1);
                 shape.dispose();
                 fixture.setUserData("world");
-//                body.setTransform(320, 180, 0);
+                //polyline.getPolyline().getTransformedVertices()
+                Vector2 center = new Vector2();
+                ((RectangleMapObject)object).getRectangle().getCenter(center);
+                fixture.getBody().setTransform(center.scl(4), 0);
                 continue;
             } catch (Exception e) {
             }
@@ -55,7 +59,7 @@ public class TiledObjectUtil {
 
     public static Shape createRectangle(RectangleMapObject rectangle) {
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(rectangle.getRectangle().width, rectangle.getRectangle().height);
+        polygonShape.setAsBox(rectangle.getRectangle().width * 2, rectangle.getRectangle().height * 2);
         return polygonShape;
     }
 
@@ -64,7 +68,7 @@ public class TiledObjectUtil {
         Vector2[] worldVertices = new Vector2[vertices.length / 2];
 
         for (int i = 0; i < worldVertices.length; i++) {
-            worldVertices[i] = new Vector2(vertices[i * 2], vertices[i * 2 + 1]);
+            worldVertices[i] = new Vector2(vertices[i * 2] * 4, vertices[i * 2 + 1] * 4);
             Gdx.app.log("Координаты " + (i + 1) + " вершины коллизии", "X: " + vertices[i * 2] +
                     "; Y: " + vertices[i * 2 + 1]);
         }

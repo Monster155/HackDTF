@@ -1,4 +1,4 @@
-package test;
+package ru.itlab.hackdtf;
 
 public class Graph_map {
     public static void print_matrix(int[][] matrix) { // print our arr
