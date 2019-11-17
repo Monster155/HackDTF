@@ -52,6 +52,8 @@ public class Enemy extends Actor {
 
         body.getBody().setLinearVelocity((float) Math.cos(body.getBody().getAngle()) * speed * delta,
                 (float) Math.sin(body.getBody().getAngle()) * speed * delta);
+        body.getBody().setAngularVelocity(0);
+        body.getBody().setAngularDamping(0);
         gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
         //TODO logic of enemies (use player + logic of UFOB enemies)

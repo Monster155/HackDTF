@@ -17,7 +17,6 @@ public class ActionButton extends Actor {
     Texture shootButton, takeButton;
     private int x = 535, y = 30, size = 75;
     public static boolean canTake = false;
-    static Gun gun;
 
     public ActionButton(final Player player) {
         setBounds(x, y, size, size);
@@ -26,8 +25,8 @@ public class ActionButton extends Actor {
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if(ActionButton.canTake)player.pickUp(gun);
-                else player.gun.shoot();
+                if(ActionButton.canTake)player.pickUp();
+                else player.playerGun.shoot();
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -43,11 +42,6 @@ public class ActionButton extends Actor {
         super.draw(batch, parentAlpha);
         if(canTake)batch.draw(takeButton, x, y, size, size);
         else batch.draw(shootButton, x, y, size, size);
-    }
-
-    public static void setCanTake(boolean ct, Gun g){
-        canTake = ct;
-        gun = g;
     }
 
 }

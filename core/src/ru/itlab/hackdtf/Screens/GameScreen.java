@@ -62,6 +62,11 @@ public class GameScreen implements Screen {
         gun.isDropped = true;
         stage.addActor(gun);
 
+        Gun gun2 = new Gun(stage, world, 2, false, player);
+        gun2.pos = new Vector2(200, 200);
+        gun2.isDropped = true;
+        stage.addActor(gun2);
+
         stage.addActor(new Enemy(stage, world, player));
 
         Gdx.input.setInputProcessor(stage);

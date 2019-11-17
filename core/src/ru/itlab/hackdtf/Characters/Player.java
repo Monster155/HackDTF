@@ -3,6 +3,7 @@ package ru.itlab.hackdtf.Characters;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
@@ -19,38 +20,44 @@ public class Player extends Actor {
     public Fixture body;
     public Texture texture;
     boolean isSlowLast = false;
-    int speed = 30000;
+    int speed = 30000, id = 0;
     Joystick joystick;
     public final int health = 2;//TODO create guns
     public int bulletCount = 0;
     public Array<Enemy> enemies;
-    public Gun gun;
+    public Array<Gun> guns;
+    public Gun playerGun;
+    Stage stage;
 
     public Player(Stage stage, Joystick joystick, World world) {
         enemies = new Array<>();
+        guns = new Array<>();
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
         body.getBody().setTransform(new Vector2(320, 180), 0);
-        gun = new Gun(stage, world, 1, false, this);
-        gun.bulletCount = 10;
-        stage.addActor(gun);
+        playerGun = new Gun(stage, world, 1, false, this);
+        playerGun.bulletCount = 10;
+        this.stage = stage;
+        stage.addActor(playerGun);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(isSlowLast != GameScreen.isSlow)
+        if (isSlowLast != GameScreen.isSlow)
             useBraking(GameScreen.isSlow);
 
         body.getBody().setLinearVelocity(joystick.cos * speed * delta, joystick.sin * speed * delta);
-        gun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
+        body.getBody().setAngularVelocity(0);
+        body.getBody().setAngularDamping(0);
+        playerGun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
 
         double minDistance = 1000f;
+        float xp = body.getBody().getPosition().x;
+        float yp = body.getBody().getPosition().y;
         for (Enemy e : enemies) {
-            float xp = body.getBody().getPosition().x;
-            float yp = body.getBody().getPosition().y;
             float xe = e.body.getBody().getPosition().x;
             float ye = e.body.getBody().getPosition().y;
 
@@ -62,6 +69,24 @@ public class Player extends Actor {
             }
         }
 
+        float size = body.getShape().getRadius();
+        minDistance = 1000f;
+        id = 0;
+        for (int i = 0; i < guns.size; i++) {
+            if (!guns.get(i).isDropped) continue;
+            double distance = Math.sqrt((xp - (guns.get(i).pos.x + guns.get(i).size.x / 2)) * (xp - (guns.get(i).pos.x + guns.get(i).size.x / 2))
+                    + (yp - (guns.get(i).pos.y - guns.get(i).size.y / 2)) * (yp - (guns.get(i).pos.y - guns.get(i).size.y / 2)));
+            if (distance < minDistance) {
+                minDistance = distance;
+                if (guns.get(i).isDropped && distance <= size) {
+                    ActionButton.canTake = true;
+                    id = i;
+                    break;
+                } else {
+                    ActionButton.canTake = false;
+                }
+            }
+        }
         //TODO check for find and take a new weapon
     }
 
@@ -94,7 +119,10 @@ public class Player extends Actor {
         isSlowLast = isSlow;
     }
 
-    public void pickUp(Gun gun){
-        this.gun = gun;
+    public void pickUp() {
+        playerGun.isDropped = true;
+        stage.getActors().get(stage.getActors().indexOf(playerGun, true)).toFront();
+        this.playerGun = guns.get(id);
+        playerGun.isDropped = false;
     }
 }

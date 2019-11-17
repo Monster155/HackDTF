@@ -10,13 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import ru.itlab.hackdtf.Characters.ActionButton;
+import ru.itlab.hackdtf.Characters.Enemy;
 import ru.itlab.hackdtf.Characters.Player;
 
 public class Gun extends Actor {
 
     Texture texture;
-    Vector2 size;
     int type;
     Stage stage;
     World world;
@@ -24,13 +23,13 @@ public class Gun extends Actor {
     public int bulletCount;
 
     public boolean isDropped = false;
-    Rectangle rectangle;
     Player player;
 
     int sumOfBullets = 0, maxSumOfBullets;
     float timeForNextBullet;
 
     public Vector2 pos = new Vector2(0, 0);
+    public Vector2 size;
     public float angleInDeg = 0;
 
     public Gun(Stage stage, World world, int type, boolean isEnemy, Player player) {
@@ -40,7 +39,7 @@ public class Gun extends Actor {
         if (isEnemy) bulletCount = 99999;
         this.stage = stage;
         this.world = world;
-        rectangle = new Rectangle(0, 0, 0, 0);
+        player.guns.add(this);
     }
 
     @Override
@@ -67,14 +66,6 @@ public class Gun extends Actor {
             sumOfBullets++;
             stage.addActor(new Bullet((float) Math.toRadians(angleInDeg), pos, world, stage));
         }
-        rectangle.set(pos.x, pos.y, size.y, size.x);
-        if(rectangle.overlaps(new Rectangle(player.body.getBody().getTransform().getPosition().x - player.body.getShape().getRadius(),
-                player.body.getBody().getTransform().getPosition().y - player.body.getShape().getRadius(),
-                player.body.getShape().getRadius()*2, player.body.getShape().getRadius()*2))
-        && !player.gun.equals(this) && isDropped){
-            Gdx.app.log("Can take", "Yes");
-            ActionButton.setCanTake(true, this);
-        } else ActionButton.setCanTake(false, this);
     }
 
     public void shoot() {
