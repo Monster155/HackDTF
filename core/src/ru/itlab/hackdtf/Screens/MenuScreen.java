@@ -27,10 +27,10 @@ public class MenuScreen implements Screen {
 
     //TODO
     private static float BUTTON_RESIZE_FACTOR = 800f;
-    private static float START_VERT_POSITION_FACTOR = 2.7f;
+    private static float START_VERT_POSITION_FACTOR = 3.3f;
     private static float AUTHOR_VERT_POSITION_FACTOR = 4.2f;
     private static float OPTIONS_VERT_POSITION_FACTOR = 5.7f;
-    private static float TIMEEXPLORER_VERT_POSITION_FACTOR = 1.5f;
+    private static float TIMEEXPLORER_VERT_POSITION_FACTOR = 2.5f;
 
     Main main;
     Vector3 temp = new Vector3();
@@ -52,14 +52,14 @@ public class MenuScreen implements Screen {
         startButtonSprite = new Sprite(startButtonTexture);
         authorsButtonSprite = new Sprite(authorsButtonTexture);
         optionsButtonSprite = new Sprite(optionsButtonTexture);
-        timeExplorerSprite= new Sprite(authorsButtonTexture);
+        timeExplorerSprite= new Sprite(timeExplorerTexture);
         backGroundSprite = new Sprite(backGroundTexture);
 
 
-        startButtonSprite.setSize(startButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR), startButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR));
-        authorsButtonSprite.setSize(authorsButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR), authorsButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR));
-        optionsButtonSprite.setSize(optionsButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR), optionsButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR));
-        timeExplorerSprite.setSize(timeExplorerSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR), timeExplorerSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR));
+        startButtonSprite.setSize(startButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, startButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
+        authorsButtonSprite.setSize(authorsButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, authorsButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
+        optionsButtonSprite.setSize(optionsButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, optionsButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
+        timeExplorerSprite.setSize(timeExplorerSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, timeExplorerSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
         backGroundSprite.setSize(width,height);
 
 
