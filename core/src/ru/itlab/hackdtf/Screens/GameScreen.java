@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
 
         setWorldContactListener();
         map = new TmxMapLoader().load("levels/testLevel.tmx");
-        tmr = new OrthogonalTiledMapRenderer(map, 2.5f);
+        tmr = new OrthogonalTiledMapRenderer(map, 4);
         TiledObjectUtil.buildBuildingsBodies(map, world);
 
         b2ddr = new Box2DDebugRenderer();
@@ -85,6 +85,19 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+
+        if (player.body.getBody().getPosition().x > 640){
+            //go to right level
+        }
+        else if (player.body.getBody().getPosition().x < 0){
+            //go to left level
+        }
+        else if (player.body.getBody().getPosition().y > 360){
+            //go to up level
+        }
+        else if (player.body.getBody().getPosition().y < 0){
+            //go to down level
+        }
 
         tmr.render();
         b2ddr.render(world, stage.getCamera().combined);
