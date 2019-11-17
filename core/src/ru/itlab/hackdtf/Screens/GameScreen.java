@@ -45,8 +45,8 @@ public class GameScreen implements Screen {
 
         setWorldContactListener();
         map = new TmxMapLoader().load("levels/testLevel.tmx");
-        tmr = new OrthogonalTiledMapRenderer(map, 1f/4);
-        TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("Objects").getObjects());
+        tmr = new OrthogonalTiledMapRenderer(map, 2.5f);
+        TiledObjectUtil.buildBuildingsBodies(map, world);
 
         b2ddr = new Box2DDebugRenderer();
         viewport = new StretchViewport(640, 360);
@@ -91,7 +91,8 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) { }
+    public void resize(int width, int height) {
+    }
 
     @Override
     public void pause() {
@@ -120,7 +121,7 @@ public class GameScreen implements Screen {
             @Override
             public void beginContact(Contact contact) {
                 Fixture fa = contact.getFixtureA(), fb = contact.getFixtureB();
-                if (fa.getUserData().equals(null) || fa.getUserData().equals(null))
+                if (fa.getUserData() == null || fa.getUserData() == null)
                     return;
                 if ((fa.getUserData().equals("player") && fb.getUserData().equals("enemy")))
                     for (Actor actor : stage.getActors()) {
