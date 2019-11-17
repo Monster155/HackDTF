@@ -18,6 +18,7 @@ import ru.itlab.hackdtf.Weapons.Gun;
 public class Player extends Actor {
 
     public Fixture body;
+    public static double minDistance;
     public Texture texture;
     boolean isSlowLast = false;
     int speed = 30000, id = 0;
@@ -25,7 +26,7 @@ public class Player extends Actor {
     public final int health = 2;//TODO create guns
     public int bulletCount = 0;
     public Array<Enemy> enemies;
-    public Array<Gun> guns;
+    public static Array<Gun> guns;
     public Gun playerGun;
     Stage stage;
 
@@ -54,7 +55,7 @@ public class Player extends Actor {
         playerGun.updatePos(body.getBody().getPosition(), (float) Math.toDegrees(body.getBody().getAngle()), body.getShape().getRadius());
         //body.getBody().getTransform().setRotation((float) Math.atan2(x, y));
 
-        double minDistance = 1000f;
+        minDistance = 1000f;
         float xp = body.getBody().getPosition().x;
         float yp = body.getBody().getPosition().y;
         for (Enemy e : enemies) {

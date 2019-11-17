@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import ru.itlab.hackdtf.Characters.Enemy;
 import ru.itlab.hackdtf.Characters.Player;
 
 public class Gun extends Actor {
@@ -39,7 +40,6 @@ public class Gun extends Actor {
         this.world = world;
         player.guns.add(this);
     }
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(texture,

@@ -14,8 +14,11 @@ import ru.itlab.hackdtf.CreateFixture;
 import ru.itlab.hackdtf.Screens.GameScreen;
 import ru.itlab.hackdtf.Weapons.Gun;
 
-public class Enemy extends Actor {
+import static ru.itlab.hackdtf.Characters.Player.guns;
+import static ru.itlab.hackdtf.Characters.Player.minDistance;
 
+public class Enemy extends Actor {
+    int id;
     Texture texture;
     Fixture body;
     boolean isSlowLast = false;
@@ -28,7 +31,7 @@ public class Enemy extends Actor {
     Stage stage;
 
     public Enemy(Stage stage, World world, Player player) {
-        this.stage = stage;
+
         this.player = player;
         speed = player.speed / 10;
         texture = new Texture(Gdx.files.internal("enemy.png"));
@@ -36,6 +39,7 @@ public class Enemy extends Actor {
         body.getBody().setTransform(new Vector2(200, 300), 0);
         gun = new Gun(stage, world, 1, true, player);
         stage.addActor(gun);
+        this.stage = stage;
         player.enemies.add(this);
     }
 
@@ -68,6 +72,22 @@ public class Enemy extends Actor {
         if (TimeUtils.millis() - lastShoot > Math.random() * 80000 * tmp) {
             gun.shoot();
             lastShoot = TimeUtils.millis();
+        }
+        float size = body.getShape().getRadius();
+        id = 0;
+
+        for (int i = 0; i < guns.size; i++) {
+            if (!guns.get(i).isDropped) continue;
+            double distanceGun = Math.sqrt((xe - (guns.get(i).pos.x + guns.get(i).size.x / 2)) * (xe - (guns.get(i).pos.x + guns.get(i).size.x / 2))
+                    + (ye - (guns.get(i).pos.y - guns.get(i).size.y / 2)) * (ye - (guns.get(i).pos.y - guns.get(i).size.y / 2)));
+            if (distanceGun < minDistance) {
+                minDistance = distanceGun;
+                if (guns.get(i).isDropped && distanceGun <= size) {
+                    id = i;
+                    pickUp(i);
+                    break;
+                }
+            }
         }
 
     }
@@ -111,5 +131,11 @@ public class Enemy extends Actor {
         if (isSlow) speed /= GameScreen.braker;
         else speed *= GameScreen.braker;
         isSlowLast = isSlow;
+    }
+    public void pickUp(int i) {
+        gun.isDropped = true;
+        stage.getActors().get(stage.getActors().indexOf(gun, true)).toFront();
+        this.gun = guns.get(i);
+        gun.isDropped = false;
     }
 }
