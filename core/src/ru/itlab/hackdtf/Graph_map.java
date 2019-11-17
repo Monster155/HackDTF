@@ -1,6 +1,14 @@
 package ru.itlab.hackdtf;
 
 public class Graph_map {
+
+    public static int[][] level;
+
+    public static int[][] getLevel(){
+        main(new String[]{});
+        return level;
+    }
+
     public static void print_matrix(int[][] matrix) { // print our arr
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
@@ -87,7 +95,6 @@ public class Graph_map {
         return finish_matrix;
     }
 
-
     public static int[] count_doors(int[][] matrix, int i, int j) { // Двери в которые можно перейти
         int[] count_and_value_graph = new int[5]; // 0 = count for; 1 = [i - 1][j]; 2 = [i + 1][j]; 3 = [i][j - 1]; 4 = [i][j + 1] (каждый эллемент массива, что означает)
 
@@ -113,7 +120,7 @@ public class Graph_map {
 
     //TODO: где нет прохода там блок fixture
     public static void main(String[] args) {
-        int map_size = 12; // количество уровней
+        int map_size = 5; // количество уровней
         int[][] map_matrix = new int[map_size * 2 + 1][map_size * 2 + 1];
         int shift_i = 0; // сдвиг i
         int shift_j = 0; // сдвиг j
@@ -123,7 +130,7 @@ public class Graph_map {
         int j = map_size;
         while (i < map_matrix.length - 1) {
             while (i < map_matrix.length - 1) {
-                int count_open_door = 1 + (int) (Math.random() * max_count_open_doors); // случайное количество дверей в ккоторые можно перейти
+                int count_open_door = 1 + (int) (Math.random() * max_count_open_doors); // случайное количество дверей в которые можно перейти
                 shift_i += count_open_door;
                 shift_j += count_open_door;
                 i += count_open_door;
@@ -167,9 +174,10 @@ public class Graph_map {
                 }
             }
         }
-        print_matrix(map_matrix); // начальная карта
-        print_matrix(add_boss_start(map(map_matrix))); //конечный результат
-
+//        print_matrix(map_matrix); // начальная карта
+//        print_matrix(add_boss_start(map(map_matrix))); //конечный результат
+        level = add_boss_start(map(map_matrix));
+        print_matrix(level);
     }
 }
 

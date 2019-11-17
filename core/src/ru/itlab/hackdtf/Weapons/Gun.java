@@ -106,7 +106,7 @@ public class Gun extends Actor {
         switch (type) {
             case 1:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
-                size = new Vector2(30, 10);
+                size = new Vector2(15, 5);
                 reload = 0.6f;
                 maxSumOfBullets = 1;
                 timeForNextBullet = 0;
@@ -115,7 +115,7 @@ public class Gun extends Actor {
                 break;
             case 2:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
-                size = new Vector2(20, 20);
+                size = new Vector2(10, 10);
                 reload = 1;
                 maxSumOfBullets = 3;
                 timeForNextBullet = 0.2f;
@@ -124,7 +124,7 @@ public class Gun extends Actor {
                 break;
             case 3:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
-                size = new Vector2(10, 30);
+                size = new Vector2(5, 15);
                 reload = 1;
                 maxSumOfBullets = 4;
                 timeForNextBullet = 0;
@@ -133,7 +133,7 @@ public class Gun extends Actor {
                 break;
             case 4:
                 texture = new Texture(Gdx.files.internal("enemy.png"));
-                size = new Vector2(50, 20);
+                size = new Vector2(25, 10);
                 reload = 0.2f;
                 maxSumOfBullets = 1;
                 timeForNextBullet = 0;

@@ -32,7 +32,7 @@ public class Enemy extends Actor {
         this.player = player;
         speed = player.speed / 10;
         texture = new Texture(Gdx.files.internal("enemy.png"));
-        body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "enemy", (short) 2);
+        body = CreateFixture.createCircle(world, new Vector2(320, 180), 10, false, "enemy", (short) 2);
         body.getBody().setTransform(new Vector2(200, 300), 0);
         gun = new Gun(stage, world, 1, true, player);
         player.guns.add(gun);

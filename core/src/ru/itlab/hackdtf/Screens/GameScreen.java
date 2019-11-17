@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import ru.itlab.hackdtf.Characters.*;
@@ -38,19 +40,27 @@ public class GameScreen implements Screen {
     Box2DDebugRenderer b2ddr;
     TiledMap map;
     OrthogonalTiledMapRenderer tmr;
+    Array<Fixture> mapBody;
+    int level[][];
+    int i = -1, j = 0;
 
     @Override
     public void show() {
         world = new World(new Vector2(0, 0), true);
+        mapBody = new Array<>();
 
         setWorldContactListener();
-        map = new TmxMapLoader().load("levels/testLevel.tmx");
+        map = new TmxMapLoader().load("levels/map1.tmx");
         tmr = new OrthogonalTiledMapRenderer(map, 4);
-        TiledObjectUtil.buildBuildingsBodies(map, world);
+        mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
 
         b2ddr = new Box2DDebugRenderer();
         viewport = new StretchViewport(640, 360);
         stage = new Stage(viewport);
+
+        level = Graph_map.getLevel();
+        findStart();
+        makeWalls();
 
         joystick = new Joystick();
         stage.addActor(joystick);
@@ -74,32 +84,78 @@ public class GameScreen implements Screen {
         stage.addActor(new Enemy(stage, world, player));
 
         Gdx.input.setInputProcessor(stage);
+
     }
 
     @Override
     public void render(float delta) {
         world.step(delta, 6, 2);
         tmr.setView((OrthographicCamera) stage.getCamera());
+        tmr.render();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
 
-        if (player.body.getBody().getPosition().x > 640){
+        if (player.body.getBody().getPosition().x > 640) {
             //go to right level
-        }
-        else if (player.body.getBody().getPosition().x < 0){
+            if (level[i].length > j + 1)
+                if (level[i][j + 1] != 0) {
+                    map.dispose();
+                    tmr.dispose();
+                    for (Fixture f : mapBody) {
+                        world.destroyBody(f.getBody());
+                    }
+                    map = new TmxMapLoader().load("levels/map2.tmx");
+                    tmr = new OrthogonalTiledMapRenderer(map, 4);
+                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
+                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                }
+        } else if (player.body.getBody().getPosition().x < 0) {
             //go to left level
-        }
-        else if (player.body.getBody().getPosition().y > 360){
+            if (j > 0)
+                if (level[i][j - 1] != 0) {
+                    map.dispose();
+                    tmr.dispose();
+                    for (Fixture f : mapBody) {
+                        world.destroyBody(f.getBody());
+                    }
+                    map = new TmxMapLoader().load("levels/map2.tmx");
+                    tmr = new OrthogonalTiledMapRenderer(map, 4);
+                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
+                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                }
+        } else if (player.body.getBody().getPosition().y > 360) {
             //go to up level
-        }
-        else if (player.body.getBody().getPosition().y < 0){
+            if (j > 0)
+                if (level[i - 1][j] != 0) {
+                    map.dispose();
+                    tmr.dispose();
+                    for (Fixture f : mapBody) {
+                        world.destroyBody(f.getBody());
+                    }
+                    map = new TmxMapLoader().load("levels/map2.tmx");
+                    tmr = new OrthogonalTiledMapRenderer(map, 4);
+                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
+                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                }
+        } else if (player.body.getBody().getPosition().y < 0) {
             //go to down level
+            if (level.length > i + 1)
+                if (level[i + 1][j] != 0) {
+                    map.dispose();
+                    tmr.dispose();
+                    for (Fixture f : mapBody) {
+                        world.destroyBody(f.getBody());
+                    }
+                    map = new TmxMapLoader().load("levels/map2.tmx");
+                    tmr = new OrthogonalTiledMapRenderer(map, 4);
+                    mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
+                    player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
+                }
         }
 
-        tmr.render();
         b2ddr.render(world, stage.getCamera().combined);
     }
 
@@ -164,5 +220,25 @@ public class GameScreen implements Screen {
 
             }
         });
+    }
+
+    public void findStart() {
+        Gdx.app.log("Level", level.length + " " + level[0].length);
+        for (int i = 0; i < level.length; i++) {
+            for (int j = 0; j < level[i].length; j++) {
+                if (level[i][j] == -1) {
+                    this.i = i;
+                    this.j = j;
+                    break;
+                }
+            }
+            if (this.i != -1)
+                break;
+        }
+        Gdx.app.log("Level", this.i + " " + this.j);
+    }
+
+    public void makeWalls(){
+        //work with levels
     }
 }

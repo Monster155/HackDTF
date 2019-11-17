@@ -35,7 +35,7 @@ public class Player extends Actor {
         guns = new Array<>();
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
-        body = CreateFixture.createCircle(world, new Vector2(320, 180), 25, false, "player", (short) 1);
+        body = CreateFixture.createCircle(world, new Vector2(320, 180), 10, false, "player", (short) 1);
         body.getBody().setTransform(new Vector2(320, 180), 0);
         playerGun = new Gun(stage, world, 1, false, this);
         playerGun.bulletCount = 10;
@@ -70,17 +70,18 @@ public class Player extends Actor {
             }
         }
 
-        float size = body.getShape().getRadius();
         minDistance = 1000f;
         id = 0;
         boolean founded = false;
         for (int i = 0; i < guns.size; i++) {
             if (!guns.get(i).isDropped) continue;
+
             double distance = Math.sqrt((xp - (guns.get(i).pos.x + guns.get(i).size.x / 2)) * (xp - (guns.get(i).pos.x + guns.get(i).size.x / 2))
                     + (yp - (guns.get(i).pos.y - guns.get(i).size.y / 2)) * (yp - (guns.get(i).pos.y - guns.get(i).size.y / 2)));
+
             if (distance < minDistance) {
                 minDistance = distance;
-                if (guns.get(i).isDropped && distance <= size) {
+                if (guns.get(i).isDropped && distance <= body.getShape().getRadius()) {
                     ActionButton.canTake = true;
                     id = i;
                     founded = true;

@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,10 +14,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class TiledObjectUtil {
-    public static void buildBuildingsBodies(TiledMap tiledMap, World world) {
+    public static Array<Fixture> buildBuildingsBodies(TiledMap tiledMap, World world) {
         MapObjects objects = tiledMap.getLayers().get("Objects").getObjects();
+        Array<Fixture> fixtures = new Array<>();
         for (MapObject object : objects) {
             Shape shape;
 
@@ -34,8 +35,9 @@ public class TiledObjectUtil {
                 fixture.setUserData("world");
                 //polyline.getPolyline().getTransformedVertices()
                 Vector2 center = new Vector2();
-                ((RectangleMapObject)object).getRectangle().getCenter(center);
+                ((RectangleMapObject) object).getRectangle().getCenter(center);
                 fixture.getBody().setTransform(center.scl(4), 0);
+                fixtures.add(fixture);
                 continue;
             } catch (Exception e) {
             }
@@ -51,10 +53,12 @@ public class TiledObjectUtil {
                 shape.dispose();
                 fixture.setUserData("world");
                 fixture.getBody().setTransform(0, 0, 0);
+                fixtures.add(fixture);
                 continue;
             } catch (Exception e) {
             }
         }
+        return fixtures;
     }
 
     public static Shape createRectangle(RectangleMapObject rectangle) {

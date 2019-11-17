@@ -25,7 +25,7 @@ public class Bullet extends Actor {
         this.stage = stage;
         Gdx.app.log("Angle", angleInRad+"");
         this.angleInRad = angleInRad;
-        body = CreateFixture.createCircle(world, pos, 2.5f, false, "pBullet", (short) 1);
+        body = CreateFixture.createCircle(world, pos, 1, false, "pBullet", (short) 1);
         body.getBody().setTransform(pos, angleInRad);
         texture = new Texture(Gdx.files.internal("player.png"));//TODO add texture
     }
