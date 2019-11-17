@@ -12,6 +12,7 @@ public class Main extends Game {
 	public void create () {
 		gs = new GameScreen();
 		setScreen(gs);
+		setScreen(new MenuScreen(this));
 	}
 
 	@Override
