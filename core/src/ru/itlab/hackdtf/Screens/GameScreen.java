@@ -2,6 +2,7 @@ package ru.itlab.hackdtf.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -28,6 +29,8 @@ import ru.itlab.hackdtf.Weapons.Gun;
 
 public class GameScreen implements Screen {
 
+    Music music;
+
     public static boolean isSlow = false;
     public static int braker = 40;
 
@@ -47,6 +50,11 @@ public class GameScreen implements Screen {
     Fixture walls[] = new Fixture[4];
 
     History history;
+    boolean isSecondRoom = false;
+
+    public GameScreen(Music music){
+        this.music = music;
+    }
 
     @Override
     public void show() {
@@ -136,29 +144,34 @@ public class GameScreen implements Screen {
         stage.act();
         stage.draw();
 
-        b2ddr.render(world, stage.getCamera().combined);
+//        b2ddr.render(world, stage.getCamera().combined);
 
         if (player.health <= 0) {
+            //first ending
             if (level[i][j] == -2) {
                 history.setText(1);
-                history.setDraw(true);
+            } else {
+                history.setText(4);
             }
+            history.setDraw(true);
             findStart();
             loadNewRoom();
             player.health = 2;
         }
 
         if (level[i][j] == -2 && player.enemies.size == 0) {
+            //second ending
             history.setText(2);
             history.setDraw(true);
         }
+
+        if(isSecondRoom){
+            history.setText(3);
+            history.setDraw(true);
+            //TODO before fight in last room you can choose: escape or fight
+        }
     }
 
-    public void thirdEnd() {
-        history.setText(3);
-        history.setDraw(true);
-        //TODO before fight in last room you can choose: escape or fight
-    }
 
     @Override
     public void resize(int width, int height) {
@@ -323,13 +336,18 @@ public class GameScreen implements Screen {
             map = new TmxMapLoader().load("levels/map1.tmx");
         } else if (level[i][j] == -2) {
             map = new TmxMapLoader().load("levels/map5.tmx");
+            isSecondRoom = true;
         } else {
-            map = new TmxMapLoader().load("levels/map2.tmx");
+            map = new TmxMapLoader().load("levels/map"+((int)(Math.random()*2)+2)+".tmx");
         }
         tmr = new OrthogonalTiledMapRenderer(map, 4);
         mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
         player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
-        stage.addActor(new Enemy(stage, world, player));
+        if(player.health > 0)stage.addActor(new Enemy(stage, world, player));
+        if(level[i][j] == -2){
+            stage.addActor(new Enemy(stage, world, player));
+            stage.addActor(new Enemy(stage, world, player));
+        }
         resetWalls();
     }
 

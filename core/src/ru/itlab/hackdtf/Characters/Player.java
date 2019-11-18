@@ -19,7 +19,7 @@ public class Player extends Actor {
 
     public Fixture body;
     public static double minDistance;
-    public Texture texture;
+    public Texture texture, healthTexture;
     boolean isSlowLast = false;
     int speed = 30000, id = 0;
     Joystick joystick;
@@ -34,6 +34,7 @@ public class Player extends Actor {
         guns = new Array<>();
         this.joystick = joystick;
         texture = new Texture(Gdx.files.internal("player.png"));
+        healthTexture = new Texture(Gdx.files.internal("enemy.png"));
         body = CreateFixture.createCircle(world, new Vector2(320, 180), 10, false, "player", (short) 1);
         body.getBody().setTransform(new Vector2(320, 180), 0);
         playerGun = new Gun(stage, world, 1, false, this);
@@ -84,7 +85,7 @@ public class Player extends Actor {
                     ActionButton.canTake = true;
                     id = i;
                     founded = true;
-                } else if(!founded){
+                } else if (!founded) {
                     ActionButton.canTake = false;
                 }
             }
@@ -107,6 +108,8 @@ public class Player extends Actor {
                 texture.getWidth() + 0, //size in image file
                 texture.getHeight() + 0,
                 false, false);
+        if (health > 0) batch.draw(healthTexture, 0, 330, 30, 30);
+        if (health > 1) batch.draw(healthTexture, 30, 330, 30, 30);
     }
 
     @Override
@@ -121,7 +124,7 @@ public class Player extends Actor {
     }
 
     public void pickUp() {
-        if(guns.indexOf(playerGun, true) < id)
+        if (guns.indexOf(playerGun, true) < id)
             id--;
         playerGun.destroy();
         this.playerGun = guns.get(id);

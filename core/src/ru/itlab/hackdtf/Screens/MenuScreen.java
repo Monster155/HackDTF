@@ -35,11 +35,11 @@ public class MenuScreen implements Screen {
     Main main;
     Vector3 temp = new Vector3();
 
-    public MenuScreen(Main main){
+    public MenuScreen(Main main) {
         this.main = main;
-        float height= Gdx.graphics.getHeight();
+        float height = Gdx.graphics.getHeight();
         float width = Gdx.graphics.getWidth();
-        camera = new OrthographicCamera(width,height);
+        camera = new OrthographicCamera(width, height);
         camera.setToOrtho(false);
         batch = new SpriteBatch();
 
@@ -52,21 +52,21 @@ public class MenuScreen implements Screen {
         startButtonSprite = new Sprite(startButtonTexture);
         authorsButtonSprite = new Sprite(authorsButtonTexture);
         optionsButtonSprite = new Sprite(optionsButtonTexture);
-        timeExplorerSprite= new Sprite(timeExplorerTexture);
+        timeExplorerSprite = new Sprite(timeExplorerTexture);
         backGroundSprite = new Sprite(backGroundTexture);
 
 
-        startButtonSprite.setSize(startButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, startButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
-        authorsButtonSprite.setSize(authorsButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, authorsButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
-        optionsButtonSprite.setSize(optionsButtonSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, optionsButtonSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
-        timeExplorerSprite.setSize(timeExplorerSprite.getWidth() *(width/BUTTON_RESIZE_FACTOR)/3, timeExplorerSprite.getHeight()*(width/BUTTON_RESIZE_FACTOR)/3);
-        backGroundSprite.setSize(width,height);
+        startButtonSprite.setSize(startButtonSprite.getWidth() * (width / BUTTON_RESIZE_FACTOR) / 3, startButtonSprite.getHeight() * (width / BUTTON_RESIZE_FACTOR) / 3);
+        authorsButtonSprite.setSize(authorsButtonSprite.getWidth() * (width / BUTTON_RESIZE_FACTOR) / 3, authorsButtonSprite.getHeight() * (width / BUTTON_RESIZE_FACTOR) / 3);
+        optionsButtonSprite.setSize(optionsButtonSprite.getWidth() * (width / BUTTON_RESIZE_FACTOR) / 3, optionsButtonSprite.getHeight() * (width / BUTTON_RESIZE_FACTOR) / 3);
+        timeExplorerSprite.setSize(timeExplorerSprite.getWidth() * (width / BUTTON_RESIZE_FACTOR) / 3, timeExplorerSprite.getHeight() * (width / BUTTON_RESIZE_FACTOR) / 3);
+        backGroundSprite.setSize(width, height);
 
 
-        startButtonSprite.setPosition((width/2f -startButtonSprite.getWidth()/2) , width/START_VERT_POSITION_FACTOR);
-        authorsButtonSprite.setPosition((width/2f -authorsButtonSprite.getWidth()/2) , width/AUTHOR_VERT_POSITION_FACTOR);
-        optionsButtonSprite.setPosition((width/2f -optionsButtonSprite.getWidth()/2) , width/OPTIONS_VERT_POSITION_FACTOR);
-        timeExplorerSprite.setPosition((width/2f -timeExplorerSprite.getWidth()/2) , width/TIMEEXPLORER_VERT_POSITION_FACTOR);
+        startButtonSprite.setPosition((width / 2f - startButtonSprite.getWidth() / 2), width / START_VERT_POSITION_FACTOR);
+        authorsButtonSprite.setPosition((width / 2f - authorsButtonSprite.getWidth() / 2), width / AUTHOR_VERT_POSITION_FACTOR);
+        optionsButtonSprite.setPosition((width / 2f - optionsButtonSprite.getWidth() / 2), width / OPTIONS_VERT_POSITION_FACTOR);
+        timeExplorerSprite.setPosition((width / 2f - timeExplorerSprite.getWidth() / 2), width / TIMEEXPLORER_VERT_POSITION_FACTOR);
         backGroundSprite.setAlpha(1);
 
     }
@@ -94,14 +94,17 @@ public class MenuScreen implements Screen {
         batch.end();
     }
 
-    void handleTouch(){
-        if(Gdx.input.justTouched()) {
-            temp.set(Gdx.input.getX(),Gdx.input.getY(), 0);
+    void handleTouch() {
+        if (Gdx.input.justTouched()) {
+            temp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(temp);
             float touchX = temp.x;
-            float touchY= temp.y;
-            if((touchX>=startButtonSprite.getX()) && touchX<= (startButtonSprite.getX()+startButtonSprite.getWidth()) && (touchY>=startButtonSprite.getY()) && touchY<=(startButtonSprite.getY()+startButtonSprite.getHeight()) ){
-                main.setScreen(new GameScreen()); // TODO ?????
+            float touchY = temp.y;
+            if ((touchX >= startButtonSprite.getX())
+                    && touchX <= (startButtonSprite.getX() + startButtonSprite.getWidth())
+                    && (touchY >= startButtonSprite.getY())
+                    && touchY <= (startButtonSprite.getY() + startButtonSprite.getHeight())) {
+                main.setScreen(main.gs);
             }
         }
     }
