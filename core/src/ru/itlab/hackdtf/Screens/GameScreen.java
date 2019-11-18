@@ -165,7 +165,7 @@ public class GameScreen implements Screen {
             history.setDraw(true);
         }
 
-        if(isSecondRoom){
+        if(isSecondRoom && level[i][j] != -2){
             history.setText(3);
             history.setDraw(true);
             //TODO before fight in last room you can choose: escape or fight
