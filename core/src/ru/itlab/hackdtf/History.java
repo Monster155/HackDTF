@@ -2,7 +2,6 @@ package ru.itlab.hackdtf;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,7 +15,7 @@ public class History extends Actor {
 
     BitmapFont font;
     GlyphLayout glyphLayout;
-    String start, end1, end2, end3, end4;
+    String start, end1, end2, end3, end4, boss;
     public boolean isDraw = false;
     Texture texture;
 
@@ -38,6 +37,7 @@ public class History extends Actor {
                 "*Это 1 из 3 концовок*";
         end4 = "Вы погибли, теперь вам придется начать с начала...\n"+
                 "*Это самая скучная концовка...*";
+        boss = "*Битва с боссом*\n *Можете сбежать - вернутся в предыдущую комнату*\n*Или попытаться одолеть босса*";
         setBounds(0, 0, 640, 360);
         addListener(new InputListener() {
             @Override
@@ -78,6 +78,9 @@ public class History extends Actor {
                 break;
             case 4:
                 glyphLayout.setText(font, end4, Color.WHITE, 580, Align.center, true);
+                break;
+            case 5:
+                glyphLayout.setText(font, boss, Color.WHITE, 580, Align.center, true);
                 break;
         }
     }

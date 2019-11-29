@@ -58,15 +58,19 @@ public class Player extends Actor {
         minDistance = 1000f;
         float xp = body.getBody().getPosition().x;
         float yp = body.getBody().getPosition().y;
-        for (Enemy e : enemies) {
-            float xe = e.body.getBody().getPosition().x;
-            float ye = e.body.getBody().getPosition().y;
+        if(enemies.size <= 0){
+            body.getBody().setTransform(body.getBody().getPosition(), (float) Math.atan2(joystick.sin, joystick.cos));
+        } else {
+            for (Enemy e : enemies) {
+                float xe = e.body.getBody().getPosition().x;
+                float ye = e.body.getBody().getPosition().y;
 
-            double distance = Math.sqrt((xp - xe) * (xp - xe) + (yp - ye) * (yp - ye));
-            if (distance < minDistance) {
-                minDistance = distance;
-                float angleRadian = (float) (Math.atan2((yp - ye) / minDistance, (xp - xe) / minDistance) + Math.PI);
-                body.getBody().setTransform(body.getBody().getPosition(), angleRadian);
+                double distance = Math.sqrt((xp - xe) * (xp - xe) + (yp - ye) * (yp - ye));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    float angleRadian = (float) (Math.atan2((yp - ye) / minDistance, (xp - xe) / minDistance) + Math.PI);
+                    body.getBody().setTransform(body.getBody().getPosition(), angleRadian);
+                }
             }
         }
 

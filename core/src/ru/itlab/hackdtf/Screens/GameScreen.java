@@ -9,7 +9,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -39,6 +38,7 @@ public class GameScreen implements Screen {
     Player player;
     Joystick joystick;
     ActionButton actionButton;
+    MiniMap miniMap;
 
     World world;
     Box2DDebugRenderer b2ddr;
@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
     History history;
     boolean isSecondRoom = false;
 
-    public GameScreen(Music music){
+    public GameScreen(Music music) {
         this.music = music;
     }
 
@@ -71,6 +71,8 @@ public class GameScreen implements Screen {
         stage.addActor(history);
 
         level = Graph_map.getLevel();
+        miniMap = new MiniMap(level);
+        stage.addActor(miniMap);
         findStart();
         makeWalls();
         resetWalls();
@@ -146,30 +148,7 @@ public class GameScreen implements Screen {
 
 //        b2ddr.render(world, stage.getCamera().combined);
 
-        if (player.health <= 0) {
-            //first ending
-            if (level[i][j] == -2) {
-                history.setText(1);
-            } else {
-                history.setText(4);
-            }
-            history.setDraw(true);
-            findStart();
-            loadNewRoom();
-            player.health = 2;
-        }
-
-        if (level[i][j] == -2 && player.enemies.size == 0) {
-            //second ending
-            history.setText(2);
-            history.setDraw(true);
-        }
-
-        if(isSecondRoom && level[i][j] != -2){
-            history.setText(3);
-            history.setDraw(true);
-            //TODO before fight in last room you can choose: escape or fight
-        }
+        endings();
     }
 
 
@@ -197,6 +176,33 @@ public class GameScreen implements Screen {
         stage.dispose();
         tmr.dispose();
         map.dispose();
+    }
+
+    public void endings() {
+        if (player.health <= 0) {
+            //first ending
+            if (level[i][j] == -2) {
+                history.setText(1);
+            } else {
+                history.setText(4);
+            }
+            history.setDraw(true);
+            findStart();
+            loadNewRoom();
+            player.health = 2;
+        }
+
+        if (level[i][j] == -2 && player.enemies.size == 0) {
+            //second ending
+            history.setText(2);
+            history.setDraw(true);
+        }
+
+        if (isSecondRoom && level[i][j] != -2) {
+            history.setText(3);
+            history.setDraw(true);
+            //TODO before fight in last room you can choose: escape or fight
+        }
     }
 
     public void myDispose() {
@@ -317,6 +323,7 @@ public class GameScreen implements Screen {
             if (this.i != -1)
                 break;
         }
+        miniMap.changePos(i, j);
     }
 
     public void makeWalls() {
@@ -331,6 +338,7 @@ public class GameScreen implements Screen {
     }
 
     public void loadNewRoom() {
+        miniMap.changePos(i, j);
         myDispose();
         if (level[i][j] == -1) {
             map = new TmxMapLoader().load("levels/map1.tmx");
@@ -338,13 +346,13 @@ public class GameScreen implements Screen {
             map = new TmxMapLoader().load("levels/map5.tmx");
             isSecondRoom = true;
         } else {
-            map = new TmxMapLoader().load("levels/map"+((int)(Math.random()*2)+2)+".tmx");
+            map = new TmxMapLoader().load("levels/map" + ((int) (Math.random() * 2) + 2) + ".tmx");
         }
         tmr = new OrthogonalTiledMapRenderer(map, 4);
         mapBody = TiledObjectUtil.buildBuildingsBodies(map, world);
         player.body.getBody().setTransform(320, 180, player.body.getBody().getAngle());
-        if(player.health > 0)stage.addActor(new Enemy(stage, world, player));
-        if(level[i][j] == -2){
+        if (player.health > 0) stage.addActor(new Enemy(stage, world, player));
+        if (level[i][j] == -2) {
             stage.addActor(new Enemy(stage, world, player));
             stage.addActor(new Enemy(stage, world, player));
         }
